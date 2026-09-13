@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<!-- Author: Dias Tursynbay -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Dias Tursynbay">
+  <meta name="description" content="Technical colophon detailing the semantic markup, development workflow, and validation methods used for the QazaqPeek website.">
+  <title>QazaqPeek Cyber Club - Colophon</title>
+</head>
+<body>
+
+  <header>
+    <h1>QazaqPeek Cyber Club Astana</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="services.html">Zones &amp; Tariffs</a></li>
+        <li><a href="booking.html">Book a Station</a></li>
+        <li><a href="colophon.html">Colophon</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h2>Site Implementation &amp; Colophon</h2>
+      
+      <!-- Comment explaining design decision: Article chosen because this technical report serves as an independent retrospective on the development process -->
+      <article>
+        <h3>Development Environment &amp; Standards</h3>
+        <p>
+          This website was hand-coded using the <strong>Visual Studio Code</strong> editor on Windows 11. In strict accordance with course instructions, no cascading style sheets (<abbr title="Cascading Style Sheets">CSS</abbr>) or JavaScript scripts were linked or injected into the markup. The structure focuses purely on semantic HTML5 elements to ensure accessibility, machine readability, and search engine discoverability.
+        </p>
+        <p>
+          To view raw source code directly in any browser window, simply press the keyboard shortcut <kbd>Ctrl</kbd> + <kbd>U</kbd> or open developer inspection via <kbd>F12</kbd>.
+        </p>
+      </article>
+
+      <article>
+        <h3>Version Control &amp; Quality Assurance</h3>
+        <p>
+          All pages were tracked incrementally using <code>git</code> version control. Every file was tested against the official W3C Nu HTML Checker before final commit. When compiling and validating the project files locally, the terminal returns the following confirmation:
+        </p>
+
+        <!-- Comment explaining pre and samp: Pre preserves exact code whitespace, while samp denotes literal output from the W3C validation tool -->
+        <pre>
+<samp>$ vnu --Werror *.html
+index.html: Success.
+services.html: Success.
+booking.html: Success.
+colophon.html: Success.
+No errors or warnings found.</samp>
+        </pre>
+      </article>
+
+      <aside>
+        <h3>File Architecture</h3>
+        <p>
+          The repository is organized with separate assets: all markup resides in the root directory while high-resolution venue photography is stored inside the dedicated <code>images/</code> folder.
+        </p>
+      </aside>
+    </section>
+  </main>
+
+  <footer>
+    <p>QazaqPeek Cyber Club &bull; Kenesary St 69, Astana &bull; Tel: +7 (706) 605 5465</p>
+    <p>&copy; 2026 Dias Tursynbay. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>

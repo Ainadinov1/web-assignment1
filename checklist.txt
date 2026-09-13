@@ -1,0 +1,80 @@
+================================================================================
+HTML BASICS ASSIGNMENT 1 — TAG CHECKLIST
+Student: Dias Tursynbay
+================================================================================
+
+TAG / ELEMENT         FILE              LINE NUMBER(S)    WRITTEN BY
+--------------------------------------------------------------------------------
+<!DOCTYPE html>       index.html        Line 1            Dias Tursynbay
+<html lang="en">      index.html        Line 3            Dias Tursynbay
+<head>                index.html        Line 4            Dias Tursynbay
+<meta charset>        index.html        Line 5            Dias Tursynbay
+<meta viewport>       index.html        Line 6            Dias Tursynbay
+<meta author>         index.html        Line 7            Dias Tursynbay
+<meta description>    index.html        Line 8            Dias Tursynbay
+<title>               index.html        Line 9            Dias Tursynbay
+<header>              index.html        Line 13           Dias Tursynbay
+<h1>                  index.html        Line 14           Dias Tursynbay
+<nav>                 index.html        Line 15           Dias Tursynbay
+<main>                index.html        Line 24           Dias Tursynbay
+<section>             index.html        Line 30           Dias Tursynbay
+<article>             index.html        Line 33           Dias Tursynbay
+<strong>              index.html        Line 36           Dias Tursynbay
+<em>                  index.html        Line 36           Dias Tursynbay
+<abbr>                index.html        Line 36           Dias Tursynbay
+<b>                   index.html        Line 39           Dias Tursynbay
+<mark>                index.html        Line 39           Dias Tursynbay
+<i>                   index.html        Line 39           Dias Tursynbay
+<small>               index.html        Line 42           Dias Tursynbay
+<sub>                 index.html        Line 42           Dias Tursynbay
+<blockquote>          index.html        Line 47           Dias Tursynbay
+<q>                   index.html        Line 48           Dias Tursynbay
+<cite>                index.html        Line 49           Dias Tursynbay
+<hr>                  index.html        Line 53           Dias Tursynbay
+<figure>              index.html        Line 57           Dias Tursynbay
+<img>                 index.html        Line 58           Dias Tursynbay
+<figcaption>          index.html        Line 59           Dias Tursynbay
+<aside>               index.html        Line 73           Dias Tursynbay
+<footer>              index.html        Line 83           Dias Tursynbay
+--------------------------------------------------------------------------------
+<table>               services.html     Line 36           Dias Tursynbay
+<caption>             services.html     Line 37           Dias Tursynbay
+<thead>               services.html     Line 38           Dias Tursynbay
+<tbody>               services.html     Line 48           Dias Tursynbay
+<tr>                  services.html     Line 39           Dias Tursynbay
+<th scope="col">      services.html     Line 40           Dias Tursynbay
+<th scope="row">      services.html     Line 49           Dias Tursynbay
+<td>                  services.html     Line 50           Dias Tursynbay
+<ul> (nested)         services.html     Line 75           Dias Tursynbay
+<ol> (with attr)      services.html     Line 92           Dias Tursynbay
+<dl>                  services.html     Line 101          Dias Tursynbay
+<dt>                  services.html     Line 102          Dias Tursynbay
+<dd>                  services.html     Line 103          Dias Tursynbay
+<div> (with comment)  services.html     Line 113          Dias Tursynbay
+--------------------------------------------------------------------------------
+<form>                booking.html      Line 35           Dias Tursynbay
+<fieldset>            booking.html      Line 36           Dias Tursynbay
+<legend>              booking.html      Line 37           Dias Tursynbay
+<label>               booking.html      Line 40           Dias Tursynbay
+<input type="text">   booking.html      Line 41           Dias Tursynbay
+<input type="email">  booking.html      Line 46           Dias Tursynbay
+<input type="tel">    booking.html      Line 51           Dias Tursynbay
+<input type="date">   booking.html      Line 56           Dias Tursynbay
+<input type="number"> booking.html      Line 61           Dias Tursynbay
+<input type="radio">  booking.html      Line 66           Dias Tursynbay
+<select>              booking.html      Line 75           Dias Tursynbay
+<option>              booking.html      Line 76           Dias Tursynbay
+<textarea>            booking.html      Line 84           Dias Tursynbay
+<span> (with comment) booking.html      Line 89           Dias Tursynbay
+<input type="checkbox booking.html      Line 88           Dias Tursynbay
+<button type="submit" booking.html      Line 93           Dias Tursynbay
+<button type="reset"> booking.html      Line 94           Dias Tursynbay
+<a> (target, rel)     booking.html      Line 29           Dias Tursynbay
+<a> (tel link)        booking.html      Line 29           Dias Tursynbay
+<a> (mailto link)     booking.html      Line 29           Dias Tursynbay
+--------------------------------------------------------------------------------
+<code>                colophon.html     Line 45           Dias Tursynbay
+<kbd>                 colophon.html     Line 38           Dias Tursynbay
+<pre>                 colophon.html     Line 50           Dias Tursynbay
+<samp>                colophon.html     Line 51           Dias Tursynbay
+================================================================================
