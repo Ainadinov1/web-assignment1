@@ -1,12 +1,27 @@
 <!DOCTYPE html>
-<!-- Author: Dias Tursynbay -->
+<!-- Author: Adilet Ainadinov -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="author" content="Dias Tursynbay">
-  <meta name="description" content="Technical colophon detailing the semantic markup, development workflow, and validation methods used for the QazaqPeek website.">
+  <meta name="author" content="Adilet Ainadinov">
+  <meta name="description" content="Technical colophon detailing semantic markup, CSS layout architecture, and validation methods for QazaqPeek website.">
   <title>QazaqPeek Cyber Club - Colophon</title>
+  <!-- Link base.css first and personal stylesheet second for cascade load order -->
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/adilet.css">
+
+  <!-- 
+    EXACTLY ONE INTERNAL STYLE BLOCK DEMONSTRATION WITH COMMENT:
+    This internal style block exists strictly to show the CSS cascade in action.
+    It overrides the color property for .colophon-internal-override defined in the external stylesheet.
+  -->
+  <style>
+    .colophon-internal-override {
+      color: #38bdf8;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
 
@@ -16,7 +31,9 @@
       <ul>
         <li><a href="index.html">Home</a></li>
         <li><a href="services.html">Zones &amp; Tariffs</a></li>
+        <li><a href="events.html">Events</a></li>
         <li><a href="booking.html">Book a Station</a></li>
+        <li><a href="login.html">Login / Register</a></li>
         <li><a href="colophon.html">Colophon</a></li>
       </ul>
     </nav>
@@ -26,29 +43,51 @@
     <section>
       <h2>Site Implementation &amp; Colophon</h2>
       
-      <!-- Comment explaining design decision: Article chosen because this technical report serves as an independent retrospective on the development process -->
       <article>
         <h3>Development Environment &amp; Standards</h3>
         <p>
-          This website was hand-coded using the <strong>Visual Studio Code</strong> editor on Windows 11. In strict accordance with course instructions, no cascading style sheets (<abbr title="Cascading Style Sheets">CSS</abbr>) or JavaScript scripts were linked or injected into the markup. The structure focuses purely on semantic HTML5 elements to ensure accessibility, machine readability, and search engine discoverability.
+          This website was hand-coded using Visual Studio Code on Windows 11 by <span class="colophon-internal-override">Dias Tursynbay</span> and <span class="colophon-internal-override">Adilet Ainadinov</span>. Custom CSS files maintain modularity: <code>base.css</code> handles common elements, while <code>dias.css</code> and <code>adilet.css</code> handle student-specific pages.
         </p>
         <p>
-          To view raw source code directly in any browser window, simply press the keyboard shortcut <kbd>Ctrl</kbd> + <kbd>U</kbd> or open developer inspection via <kbd>F12</kbd>.
+          To view raw source code in any browser, press <kbd>Ctrl</kbd> + <kbd>U</kbd> or open developer tools via <kbd>F12</kbd>.
         </p>
       </article>
+
+      <!-- 
+        CSS GRID DEMONSTRATION ON ADILET'S PAGES:
+        The colophon grid below uses repeat(), fr units, minmax(), gap, and a spanned item (.colophon-grid-wide).
+        Comment: Grid suited this block better than Flexbox because structured technical cards require uniform column alignments.
+      -->
+      <div class="colophon-grid">
+        <div class="colophon-grid-wide">
+          <h3>📂 Modular CSS Architecture</h3>
+          <p>Shared layout rules reside in <code>base.css</code>. Personal page styles are isolated in <code>dias.css</code> (Home, Services, Events) and <code>adilet.css</code> (Booking, Login, Colophon).</p>
+        </div>
+
+        <div class="colophon-card">
+          <h3>🛠️ Editors &amp; Tools</h3>
+          <p>VS Code, Git, and W3C Nu HTML &amp; CSS Validators.</p>
+        </div>
+
+        <div class="colophon-card">
+          <h3>🎨 Color Palette</h3>
+          <p>5 curated colors with hex, rgb/rgba, and named color values.</p>
+        </div>
+      </div>
 
       <article>
         <h3>Version Control &amp; Quality Assurance</h3>
         <p>
-          All pages were tracked incrementally using <code>git</code> version control. Every file was tested against the official W3C Nu HTML Checker before final commit. When compiling and validating the project files locally, the terminal returns the following confirmation:
+          All pages were tracked incrementally using <code>git</code> version control. Every file was tested against the official W3C HTML &amp; CSS checkers before final commit.
         </p>
 
-        <!-- Comment explaining pre and samp: Pre preserves exact code whitespace, while samp denotes literal output from the W3C validation tool -->
         <pre>
 <samp>$ vnu --Werror *.html
 index.html: Success.
 services.html: Success.
+events.html: Success.
 booking.html: Success.
+login.html: Success.
 colophon.html: Success.
 No errors or warnings found.</samp>
         </pre>
@@ -57,15 +96,17 @@ No errors or warnings found.</samp>
       <aside>
         <h3>File Architecture</h3>
         <p>
-          The repository is organized with separate assets: all markup resides in the root directory while high-resolution venue photography is stored inside the dedicated <code>images/</code> folder.
+          Root directory stores HTML pages and documentation. All CSS stylesheets reside in <code>css/</code> directory. Venue photography is organized inside <code>images/</code> folder.
         </p>
       </aside>
     </section>
   </main>
 
+  <a href="#top" class="back-to-top">↑ Top</a>
+
   <footer>
     <p>QazaqPeek Cyber Club &bull; Kenesary St 69, Astana &bull; Tel: +7 (706) 605 5465</p>
-    <p>&copy; 2026 Dias Tursynbay. All rights reserved.</p>
+    <p>&copy; 2026 Dias Tursynbay &amp; Adilet Ainadinov. All rights reserved.</p>
   </footer>
 
 </body>

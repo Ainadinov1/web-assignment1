@@ -1,12 +1,15 @@
 <!DOCTYPE html>
-<!-- Author: Dias Tursynbay -->
+<!-- Author: Adilet Ainadinov -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="author" content="Dias Tursynbay">
+  <meta name="author" content="Adilet Ainadinov">
   <meta name="description" content="Reserve a gaming computer station or private boot camp at QazaqPeek Cyber Club on Kenesary 69, Astana.">
   <title>QazaqPeek Cyber Club - Book a Station</title>
+  <!-- Link base.css first and personal stylesheet second for cascade load order -->
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/adilet.css">
 </head>
 <body>
 
@@ -16,7 +19,9 @@
       <ul>
         <li><a href="index.html">Home</a></li>
         <li><a href="services.html">Zones &amp; Tariffs</a></li>
+        <li><a href="events.html">Events</a></li>
         <li><a href="booking.html">Book a Station</a></li>
+        <li><a href="login.html">Login / Register</a></li>
         <li><a href="colophon.html">Colophon</a></li>
       </ul>
     </nav>
@@ -28,40 +33,45 @@
       <article>
         <h3>Booking Guidelines &amp; Location</h3>
         <p>
-          Secure your seat in advance to avoid waiting during peak tournament evenings. Stations are held for exactly fifteen minutes past your selected arrival time before being released to walk-in visitors.
+          Secure your seat in advance to avoid waiting during peak tournament evenings. Stations are held for fifteen minutes past arrival time before release.
         </p>
         <p>
           Find us on <a href="https://2gis.kz/astana" target="_blank" rel="noopener noreferrer">2GIS Map — Kenesary Street 69</a> or reach our administrator directly via telephone at <a href="tel:+77066055465">+7 (706) 605 5465</a> or email at <a href="mailto:info@qazaqpeek.kz">info@qazaqpeek.kz</a>.
         </p>
       </article>
 
-      <!-- Comment explaining form implementation: The form currently posts to # because no server-side handler exists yet; back-end processing is scheduled for a future assignment -->
+      <!-- Comment explaining form implementation -->
       <form method="POST" action="#">
         <fieldset>
           <legend>Station Reservation Details</legend>
 
-          <p>
-            <label for="client-name">Full Name or Gamer Tag:</label><br>
-            <input type="text" id="client-name" name="client_name" placeholder="e.g., Dias / ShadowAce" required>
-          </p>
+          <!-- Flexbox form row on Adilet's page: flex-wrap with flex items -->
+          <div class="form-row-flex">
+            <div class="form-group-flex">
+              <label for="client-name" class="required-field">Full Name or Gamer Tag:</label><br>
+              <input type="text" id="client-name" name="client_name" placeholder="e.g., Dias / ShadowAce" required>
+            </div>
+
+            <div class="form-group-flex">
+              <label for="client-email" class="required-field">Email Address:</label><br>
+              <input type="email" id="client-email" name="client_email" placeholder="gamer@example.kz" required>
+            </div>
+          </div>
+
+          <div class="form-row-flex">
+            <div class="form-group-flex">
+              <label for="client-phone" class="required-field">Phone Number:</label><br>
+              <input type="tel" id="client-phone" name="client_phone" placeholder="+7 706 000 0000" required>
+            </div>
+
+            <div class="form-group-flex">
+              <label for="booking-date" class="required-field">Reservation Date:</label><br>
+              <input type="date" id="booking-date" name="booking_date" required>
+            </div>
+          </div>
 
           <p>
-            <label for="client-email">Email Address:</label><br>
-            <input type="email" id="client-email" name="client_email" placeholder="gamer@example.kz" required>
-          </p>
-
-          <p>
-            <label for="client-phone">Phone Number:</label><br>
-            <input type="tel" id="client-phone" name="client_phone" placeholder="+7 706 000 0000" required>
-          </p>
-
-          <p>
-            <label for="booking-date">Reservation Date:</label><br>
-            <input type="date" id="booking-date" name="booking_date" required>
-          </p>
-
-          <p>
-            <label for="party-size">Number of Players (1–5):</label><br>
+            <label for="party-size" class="required-field">Number of Players (1–5):</label><br>
             <input type="number" id="party-size" name="party_size" min="1" max="5" value="1" required>
           </p>
 
@@ -76,7 +86,7 @@
           </p>
 
           <p>
-            <label for="time-slot">Preferred Time Slot:</label><br>
+            <label for="time-slot" class="required-field">Preferred Time Slot:</label><br>
             <select id="time-slot" name="time_slot" required>
               <option value="">-- Choose a package --</option>
               <option value="morning">Morning Warmup (08:00 - 14:00)</option>
@@ -90,7 +100,6 @@
             <textarea id="special-notes" name="special_notes" rows="4" cols="45" placeholder="Mention titles to update beforehand..."></textarea>
           </p>
 
-          <!-- Comment explaining span tag: Used strictly to highlight terms text inline where no phrase-level semantic tag fits the legal context -->
           <p>
             <input type="checkbox" id="policy-agree" name="policy_agree" required>
             <label for="policy-agree">I agree to the <span>house conduct and hardware liability rules</span>.</label>
@@ -105,9 +114,11 @@
     </section>
   </main>
 
+  <a href="#top" class="back-to-top">↑ Top</a>
+
   <footer>
     <p>QazaqPeek Cyber Club &bull; Kenesary St 69, Astana &bull; Tel: +7 (706) 605 5465</p>
-    <p>&copy; 2026 Dias Tursynbay. All rights reserved.</p>
+    <p>&copy; 2026 Dias Tursynbay &amp; Adilet Ainadinov. All rights reserved.</p>
   </footer>
 
 </body>

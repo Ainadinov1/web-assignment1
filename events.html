@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<!-- Author: Dias Tursynbay -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Dias Tursynbay">
+  <meta name="description" content="Upcoming gaming events, community nights, and tournament activities at QazaqPeek Cyber Club in Astana.">
+  <title>QazaqPeek Cyber Club - Events</title>
+  <!-- Link base.css first and personal stylesheet second for cascade load order -->
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/dias.css">
+</head>
+<body>
+
+  <header>
+    <h1>QazaqPeek Cyber Club Astana</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="services.html">Zones &amp; Tariffs</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="booking.html">Book a Station</a></li>
+        <li><a href="login.html">Login / Register</a></li>
+        <li><a href="colophon.html">Colophon</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h2 class="section-subtitle">Community Events &amp; Tournaments</h2>
+      <p>Meet local players, practice with a team, and take part in friendly competitions at Kenesary 69. Event places are limited, so use the booking page to reserve a station for open-play sessions.</p>
+
+      <!-- 
+        CSS GRID DEMONSTRATION ON DIAS'S PAGES:
+        The grid layout below uses repeat(), fr units, minmax(), gap, and a spanned item (.featured-event-card).
+        Comment: Grid suited this section better than Flexbox because tournament cards require strict 2D column/row alignment.
+      -->
+      <div class="events-grid">
+        <div class="featured-event-card">
+          <h3>🏆 QazaqPeek Monthly Championship Cup</h3>
+          <p><strong>Date:</strong> September 27, 2026 | <strong>Time:</strong> 12:00 – 20:00</p>
+          <p>Single-elimination 5v5 Counter-Strike 2 tournament in our VIP 2 arena. Grand prize includes 50,000 KZT club balance top-up.</p>
+        </div>
+
+        <div class="event-card">
+          <h3>⚡ Weekend 5v5 Scrim Night</h3>
+          <p><strong>Date:</strong> September 19 | 18:00–22:00</p>
+          <p>Open practice for local five-stacks.</p>
+        </div>
+
+        <div class="event-card">
+          <h3>🎮 Community Game Night</h3>
+          <p><strong>Date:</strong> September 23 | 19:00–23:00</p>
+          <p>Drop-in matches and player introductions.</p>
+        </div>
+      </div>
+    </section>
+
+    <hr>
+
+    <section>
+      <h2>Event Schedule Matrix</h2>
+      <table>
+        <caption>September 2026 Event Calendar</caption>
+        <thead>
+          <tr>
+            <th scope="col">Date</th>
+            <th scope="col">Event</th>
+            <th scope="col">Time</th>
+            <th scope="col">Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">September 19</th>
+            <td>Weekend 5v5 Scrim Night</td>
+            <td>18:00–22:00</td>
+            <td>Open practice for teams of five.</td>
+          </tr>
+          <tr>
+            <th scope="row">September 23</th>
+            <td>Community Game Night</td>
+            <td>19:00–23:00</td>
+            <td>Drop-in matches and player introductions.</td>
+          </tr>
+          <tr>
+            <th scope="row">September 27</th>
+            <td>QazaqPeek Monthly Cup</td>
+            <td>12:00–20:00</td>
+            <td>Single-elimination tournament in VIP zones.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <hr>
+
+    <section>
+      <h2>How to Join</h2>
+      <ol>
+        <li><a href="login.html">Register or log in</a> to keep your contact details ready.</li>
+        <li>Review the event date, time, and participation requirements.</li>
+        <li><a href="booking.html">Book a station</a> for the event or contact administrator for team registration.</li>
+      </ol>
+      <p>For tournament questions, call <a href="tel:+77066055465">+7 (706) 605 5465</a> or email <a href="mailto:info@qazaqpeek.kz">info@qazaqpeek.kz</a>.</p>
+    </section>
+  </main>
+
+  <a href="#top" class="back-to-top">↑ Top</a>
+
+  <footer>
+    <p>QazaqPeek Cyber Club &bull; Kenesary St 69, Astana &bull; Tel: +7 (706) 605 5465</p>
+    <p>&copy; 2026 Dias Tursynbay &amp; Adilet Ainadinov. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>

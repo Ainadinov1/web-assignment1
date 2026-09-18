@@ -1,0 +1,194 @@
+/* 
+================================================================================
+QAZAQPEEK CYBER CLUB - BASE STYLESHEET (base.css)
+Written by: Dias Tursynbay & Adilet Ainadinov
+
+COLOR PALETTE (Max 5 colors):
+1. #0f172a (Hex) - Deep navy blue used for main header, footer, and page background to create a dark gaming lounge theme.
+2. #1e293b (Hex) - Dark slate grey used for container cards, table backgrounds, and section boxes.
+3. #38bdf8 (Hex) - Sky blue accent used for interactive links, active navigation items, and button highlights.
+4. rgba(240, 242, 245, 0.95) (RGBA) - Soft white with high opacity used for crisp readable body text on dark backgrounds.
+5. navy (Named Color) - Classic navy color used for structural borders and subtle card dividers.
+================================================================================
+*/
+
+/* Universal Selector (*) - Applied to all elements to enforce standard box-sizing model */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Margin collapse explanation comment:
+   The top margin of <h1> inside <header> would normally collapse with the top margin of <header>. 
+   To avoid unexpected spacing, we use padding on <header> and zero out top margins on <h1>.
+*/
+
+/* Type Selector: body - Sets fundamental typography, background color, and line height */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: 0.3px;
+  background-color: #0f172a;
+  color: rgba(240, 242, 245, 0.95);
+  min-height: 100vh;
+}
+
+/* Grouping with commas (,) - Shared heading styles */
+h1, h2, h3 {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-weight: 700;
+  color: #38bdf8;
+  margin-bottom: 12px;
+}
+
+h1 {
+  font-size: 28px;
+  letter-spacing: 1px;
+}
+
+h2 {
+  font-size: 22px;
+  border-bottom: 2px solid navy;
+  padding-bottom: 6px;
+  margin-top: 10px;
+}
+
+h3 {
+  font-size: 18px;
+  color: #ffffff;
+}
+
+/* Child Selector (>) - Targets header tag directly inside body */
+body > header {
+  background-color: #1e293b;
+  padding: 20px;
+  text-align: center;
+  border-bottom: 3px solid #38bdf8;
+}
+
+/* Centering Technique 1: margin auto - Main container centered horizontally with fixed maximum width */
+main {
+  max-width: 1000px;
+  margin: 20px auto; /* Margin auto centers main horizontally */
+  padding: 20px;
+  background-color: #1e293b;
+  border-radius: 8px;
+  border: 1px solid navy;
+}
+
+/* Descendant Selector (nav ul) - Styles the navigation list inside nav bar */
+nav ul {
+  list-style: none;
+  /* Flexbox Navigation Requirements: flex row using justify-content, align-items and gap */
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-top: 15px;
+  padding: 10px;
+  background-color: #0f172a;
+  border-radius: 6px;
+}
+
+/* Type selector for nav links */
+nav a {
+  color: rgba(240, 242, 245, 0.95);
+  text-decoration: none;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 4px;
+}
+
+/* Pseudo-class :hover - Links change background and color when hovered */
+nav a:hover {
+  background-color: #38bdf8;
+  color: #0f172a;
+}
+
+/* Pseudo-class :focus - Keyboard focus accessibility indicator */
+a:focus, button:focus, input:focus, select:focus, textarea:focus {
+  outline: 2px solid #38bdf8;
+  outline-offset: 2px;
+}
+
+/* Adjacent Sibling Selector (+) - Adds extra top margin to paragraphs following h2 headings */
+h2 + p {
+  margin-top: 8px;
+}
+
+/* Section spacing */
+section {
+  margin-bottom: 25px;
+}
+
+hr {
+  border: 0;
+  height: 1px;
+  background-color: navy;
+  margin: 25px 0;
+}
+
+/* Table styling shared across pages */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 15px 0;
+  background-color: #0f172a;
+}
+
+th, td {
+  padding: 10px 14px;
+  border: 1px solid navy;
+  text-align: left;
+}
+
+th {
+  background-color: #1e293b;
+  color: #38bdf8;
+}
+
+/* Pseudo-class :nth-child - Alternating row shading in tables */
+tbody tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+/* Common Footer Styling */
+footer {
+  text-align: center;
+  padding: 15px;
+  background-color: #1e293b;
+  border-top: 2px solid navy;
+  font-size: 14px;
+  margin-top: 20px;
+}
+
+/* Single allowed !important demonstration with comment justification:
+   Justification: Disabled buttons must maintain subdued opacity regardless of any state or class overrides.
+*/
+button:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed;
+}
+
+/* Fixed positioning element: Floating back to top button staying on screen */
+.back-to-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #38bdf8;
+  color: #0f172a;
+  padding: 8px 14px;
+  border-radius: 20px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 13px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+}
+
+.back-to-top:hover {
+  background-color: #ffffff;
+}

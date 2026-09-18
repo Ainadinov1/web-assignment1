@@ -7,6 +7,9 @@
   <meta name="author" content="Dias Tursynbay">
   <meta name="description" content="Detailed hardware specifications, hourly rates, and competitive boot camp pricing at QazaqPeek Cyber Club in Astana.">
   <title>QazaqPeek Cyber Club - Zones &amp; Tariffs</title>
+  <!-- Link base.css first and personal stylesheet second for cascade load order -->
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/dias.css">
 </head>
 <body>
 
@@ -16,27 +19,29 @@
       <ul>
         <li><a href="index.html">Home</a></li>
         <li><a href="services.html">Zones &amp; Tariffs</a></li>
+        <li><a href="events.html">Events</a></li>
         <li><a href="booking.html">Book a Station</a></li>
+        <li><a href="login.html">Login / Register</a></li>
         <li><a href="colophon.html">Colophon</a></li>
       </ul>
     </nav>
   </header>
 
   <main>
-    <section>
-      <h2>Gaming Areas &amp; Hourly Rates</h2>
+    <section id="services-section">
+      <h2 class="section-subtitle">Gaming Areas &amp; Hourly Rates</h2>
       <article>
-        <h3>Tiered Battle Stations</h3>
+        <!-- Element used for specificity experiment in dias.css -->
+        <h3 class="tariff-card-header">Tiered Battle Stations</h3>
         <p>
           At QazaqPeek, our hardware packages are split into distinct tiers tailored for different budgets and competitive intensity. Our Standard Hall provides high frame rates for everyday multiplayer sessions, while our VIP and Boot Camp suites feature tournament monitors running at <strong>360Hz</strong> alongside sound-isolated booths.
         </p>
         <p>
-          All visitors pay through a unified guest account balance. Night packages guarantee a reserved desk from 22:00 until 08:00 the following morning. All rates are listed in Kazakhstani Tenge (KZT) and include full access to our pre-installed local game caching server.
+          All visitors pay through a unified guest account balance. Night packages guarantee a reserved desk from 22:00 until 08:00 the following morning. All rates are listed in Kazakhstani Tenge (KZT).
         </p>
       </article>
 
-      <!-- Comment explaining design decision: A table is used here because tariff matrices represent two-dimensional tabular data with strict column/row relationships -->
-      <table border="1">
+      <table class="tariff-table">
         <caption>Official Pricing Matrix at Kenesary 69 (Effective September 2026)</caption>
         <thead>
           <tr>
@@ -79,7 +84,6 @@
       <h2>Hardware Setup &amp; Account Guidelines</h2>
 
       <h3>Standard Station Equipment</h3>
-      <!-- Nested List: Hardware tiers containing peripheral sub-lists -->
       <ul>
         <li>Standard &amp; VIP Peripherals
           <ul>
@@ -97,35 +101,39 @@
       </ul>
 
       <h3>How to Top Up Your Balance</h3>
-      <!-- Ordered list with attribute (type="1" and start="1") -->
       <ol type="1" start="1">
-        <li>Approach the reception desk at the entrance or open the Kaspi terminal terminal app.</li>
+        <li>Approach the reception desk at the entrance or open Kaspi terminal app.</li>
         <li>Provide your registered mobile number or scan your membership QR code.</li>
-        <li>Deposit cash or confirm the mobile transfer for your chosen hours.</li>
+        <li>Deposit cash or confirm mobile transfer for your chosen hours.</li>
         <li>Take your seat, press the power button, and enter your login password.</li>
       </ol>
 
       <h3>Esports Club Glossary</h3>
-      <!-- Definition list: dt and dd -->
       <dl>
-        <dt>Boot Camp</dt>
+        <dt class="glossary-term">Boot Camp</dt>
         <dd>An isolated private room with five identically configured computers dedicated to professional team training and tournament qualifiers.</dd>
-        <dt>LAN Cache</dt>
+        <dt class="glossary-term">LAN Cache</dt>
         <dd>A dedicated local server that updates major competitive games at gigabit speeds so guests never wait for client patches.</dd>
-        <dt>Night Package</dt>
+        <dt class="glossary-term">Night Package</dt>
         <dd>A discounted flat-rate session granting continuous desk access from 22:00 until 08:00 the following morning.</dd>
       </dl>
 
-      <!-- Comment explaining why div is used: A generic wrapper used strictly to isolate the security notice badge without implying semantic article or section structure -->
-      <div>
+      <!-- 
+        EXACTLY ONE INLINE STYLE DEMONSTRATION WITH COMMENT:
+        This inline style attribute exists strictly to demonstrate cascade priority in CSS.
+        It overrides the default border-left color defined in the external stylesheet for .notice-box.
+      -->
+      <div class="static-text-block" style="border-left: 4px solid #38bdf8; padding-left: 10px; margin-top: 15px;">
         <p><small>Notice: Unused prepaid minutes roll over to your club balance and do not expire within 90 days.</small></p>
       </div>
     </section>
   </main>
 
+  <a href="#top" class="back-to-top">↑ Top</a>
+
   <footer>
     <p>QazaqPeek Cyber Club &bull; Kenesary St 69, Astana &bull; Tel: +7 (706) 605 5465</p>
-    <p>&copy; 2026 Dias Tursynbay. All rights reserved.</p>
+    <p>&copy; 2026 Dias Tursynbay &amp; Adilet Ainadinov. All rights reserved.</p>
   </footer>
 
 </body>

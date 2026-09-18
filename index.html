@@ -7,6 +7,9 @@
   <meta name="author" content="Dias Tursynbay">
   <meta name="description" content="Official website of QazaqPeek Cyber Club in Astana on Kenesary 69, presenting competitive gaming PCs, lounge zones, and venue guidelines.">
   <title>QazaqPeek Cyber Club Astana - Home</title>
+  <!-- Link base.css first and personal stylesheet second for cascade load order -->
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/dias.css">
 </head>
 <body>
 
@@ -16,38 +19,42 @@
       <ul>
         <li><a href="index.html">Home</a></li>
         <li><a href="services.html">Zones &amp; Tariffs</a></li>
+        <li><a href="events.html">Events</a></li>
         <li><a href="booking.html">Book a Station</a></li>
+        <li><a href="login.html">Login / Register</a></li>
         <li><a href="colophon.html">Colophon</a></li>
       </ul>
     </nav>
   </header>
 
   <main>
-    <!-- Internal jump links for same-page navigation -->
+    <!-- Centering Technique 2: Flexbox centered hero title box -->
+    <div class="hero-center-box">
+      <h2>Welcome to QazaqPeek Esports Lounge</h2>
+      <p>Astana's premier competitive gaming venue on Kenesary 69.</p>
+    </div>
+
+    <!-- Same-page jump links -->
     <nav aria-label="Page contents">
       <p>Quick jump: <a href="#about-section">About Our Club</a> | <a href="#gallery-section">Club Gallery</a> | <a href="#hours-section">Operating Hours</a></p>
     </nav>
 
+    <!-- Comment on ID usage: ID '#about-section' is unique on this page and serves as a target for same-page jump navigation -->
     <section id="about-section">
-      <h2>Professional Esports Environment on Kenesary Street</h2>
-      <!-- Comment explaining design decision: Article chosen because this overview stands alone as an independent descriptive feature -->
-      <article>
+      <h2 class="section-subtitle">Professional Esports Environment on Kenesary Street</h2>
+      <article class="static-text-block">
         <h3>About the Venue</h3>
         <p>
-          Located at <strong>Kenesary 69</strong> in central <strong>Astana</strong>, <em>QazaqPeek</em> delivers an authentic competitive gaming experience for casual players and tournament teams alike. Our arena features machines configured with high-performance hardware and ultra-responsive <strong>360<abbr title="Hertz">Hz</abbr></strong> monitors, creating an optimal setup for tactical shooters and fast-paced competitive titles.
+          Located at <strong>Kenesary 69</strong> in central <strong>Astana</strong>, <em>QazaqPeek</em> delivers an authentic competitive gaming experience for casual players and tournament teams alike. Our arena features machines configured with high-performance hardware and ultra-responsive <strong>360<abbr title="Hertz">Hz</abbr></strong> monitors.
         </p>
         <p>
-          We maintain strict room climate control at <b>19&deg;C</b> to prevent hardware throttling, while sound-dampening partitions keep team voice comms clear. Whether running five-stack scrims in <mark>Counter-Strike 2</mark> or grinding ranked matches in <i>Dota 2</i>, our network provides uninterrupted low-ping fiber-optic connectivity.
-        </p>
-        <p>
-          Every desk includes mechanical keyboards, precision optical sensors, and sanitized noise-isolating headsets. Refreshments and snacks are stocked continuously at the reception counter. We prioritize player ergonomics, providing adjustable lumbar-supported chairs alongside certified <small>CAT-7</small> shielded cabling encased in H<sub>2</sub>O-resistant raceways.
+          We maintain strict room climate control at <b>19&deg;C</b> to prevent hardware throttling, while sound-dampening partitions keep team voice comms clear. Whether running five-stack scrims in <mark>Counter-Strike 2</mark> or grinding ranked matches in <i>Dota 2</i>, our network provides low-ping fiber connectivity.
         </p>
       </article>
 
-      <!-- Comment explaining why blockquote is used: Captures primary interview evidence collected during field research -->
       <blockquote>
         <p><q>We founded QazaqPeek on Kenesary to give local players a tournament-grade setup with stable ping and modern peripherals without compromises.</q></p>
-        <footer>— <cite>Alikhan Nurpeisov</cite>, Shift Administrator (Interviewed on September 13, 2026)</footer>
+        <footer>— <cite>Alikhan Nurpeisov</cite>, Shift Administrator</footer>
       </blockquote>
     </section>
 
@@ -55,38 +62,51 @@
 
     <section id="gallery-section">
       <h2>Club Facilities &amp; Equipment</h2>
-      <figure>
-        <img src="images/storefront.jpg" alt="Front illuminated entrance sign and facade of QazaqPeek cyber club at Kenesary 69" width="400">
-        <figcaption>Figure 1: Main entrance and registration lounge at Kenesary 69.</figcaption>
-      </figure>
+      <p>Explore our venue facilities, high-end peripheral options, and tournament arenas.</p>
 
-      <figure>
-        <img src="images/interior.jpg" alt="Interior view of gaming desks with high-refresh monitors and gaming chairs inside QazaqPeek" width="400">
-        <figcaption>Figure 2: The primary arena hall with individual station setups.</figcaption>
-      </figure>
+      <!-- Floated Image Demonstration: Image floated left inside text box -->
+      <div>
+        <img src="images/storefront.jpg" alt="Entrance storefront facade of QazaqPeek Cyber Club" width="220" class="floated-facility-img">
+        <p>
+          Our main entrance welcomes guests 24 hours a day on Kenesary Street 69. The reception hall is staffed continuously by technical administrators ready to assist with account top-ups, custom game installations, and tournament seat reservations. 
+        </p>
+        <!-- Clear float class prevents text wrapping breakdown -->
+        <div class="clear-after-float"></div>
+      </div>
 
-      <figure>
-        <img src="images/tools.jpg" alt="Close-up of mechanical keyboard, tournament mouse, and headset on large desk mat" width="400">
-        <figcaption>Figure 3: Tournament-grade peripherals cleaned and reset between player sessions.</figcaption>
-      </figure>
+      <!-- Flexbox Container on Dias's Page: flex-wrap with items that grow or shrink -->
+      <div class="facility-container">
+        <figure class="facility-card">
+          <!-- Absolute positioning demonstration badge -->
+          <span class="badge-popular">Popular</span>
+          <img src="images/interior.jpg" alt="Interior view of main arena hall" width="100%">
+          <figcaption>Figure 1: Main arena hall with 240Hz &amp; 360Hz monitors.</figcaption>
+        </figure>
+
+        <figure class="facility-card">
+          <img src="images/tools.jpg" alt="Close-up of tournament keyboard and mouse" width="100%">
+          <figcaption>Figure 2: Mechanical peripherals sanitized between sessions.</figcaption>
+        </figure>
+      </div>
     </section>
 
     <hr>
 
+    <!-- Comment on ID usage: ID '#hours-section' is unique to the schedule section on this page -->
     <aside id="hours-section">
       <h2>Schedule &amp; House Policy</h2>
       <p>
         Our club operates <strong>24/7</strong> every day of the week. Night package wristbands are issued starting promptly at <b>22:00</b>. Guests under 18 years of age are admitted until 22:00 according to municipal laws.
       </p>
-      <p>
-        Cleanliness is enforced at every battle station: outside drinks must have sealable, spill-proof caps.
-      </p>
     </aside>
   </main>
 
+  <!-- Fixed position back-to-top button link -->
+  <a href="#top" class="back-to-top">↑ Top</a>
+
   <footer>
     <p>QazaqPeek Cyber Club &bull; Kenesary St 69, Astana &bull; Tel: +7 (706) 605 5465</p>
-    <p>&copy; 2026 Dias Tursynbay. All rights reserved.</p>
+    <p>&copy; 2026 Dias Tursynbay &amp; Adilet Ainadinov. All rights reserved.</p>
   </footer>
 
 </body>
