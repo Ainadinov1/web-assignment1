@@ -1,0 +1,152 @@
+/* 
+================================================================================
+QAZAQPEEK CYBER CLUB - ADILET AINADINOV'S STYLESHEET (adilet.css)
+Student: Adilet Ainadinov
+Pages Covered: booking.html, login.html, colophon.html
+================================================================================
+*/
+
+/* 
+================================================================================
+CSS GRID IMPLEMENTATION (colophon.html / booking.html)
+Why Grid suited this block better than Flexbox:
+CSS Grid was selected for the technical specifications layout because it provides precise two-dimensional 
+alignment across columns and rows, keeping system info cards aligned seamlessly regardless of text length.
+================================================================================
+*/
+.colophon-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(200px, 1fr)); /* repeat(), fr units, minmax() */
+  gap: 20px; /* gap requirement */
+  margin-top: 15px;
+}
+
+/* Grid item spanning 2 columns */
+.colophon-grid-wide {
+  grid-column: span 2; /* Spanning requirement */
+  background-color: #0f172a;
+  padding: 15px;
+  border-radius: 6px;
+  border: 1px solid #38bdf8;
+}
+
+.colophon-card {
+  background-color: #0f172a;
+  padding: 15px;
+  border-radius: 6px;
+  border: 1px solid navy;
+}
+
+/* 
+================================================================================
+FLEXBOX IMPLEMENTATION (booking.html / login.html)
+Flex container with flex-wrap and flex-direction row for form inputs and option buttons
+================================================================================
+*/
+.form-row-flex {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.form-group-flex {
+  flex: 1 1 200px;
+}
+
+/* Form controls styling */
+fieldset {
+  border: 1px solid navy;
+  padding: 20px;
+  border-radius: 6px;
+  background-color: #0f172a;
+  margin-bottom: 20px;
+}
+
+legend {
+  color: #38bdf8;
+  font-weight: bold;
+  padding: 0 8px;
+}
+
+/* Attribute Selectors - Target form inputs by type */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="date"],
+input[type="number"],
+input[type="password"],
+select,
+textarea {
+  width: 100%;
+  padding: 8px 12px;
+  margin-top: 4px;
+  background-color: #1e293b;
+  border: 1px solid navy;
+  color: rgba(240, 242, 245, 0.95);
+  border-radius: 4px;
+  font-family: inherit;
+}
+
+/* Pseudo-class :focus for form input elements */
+input:focus, select:focus, textarea:focus {
+  border-color: #38bdf8;
+}
+
+/* Button styling */
+button[type="submit"], button[type="reset"] {
+  background-color: #38bdf8;
+  color: #0f172a;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+button[type="reset"] {
+  background-color: #1e293b;
+  color: rgba(240, 242, 245, 0.95);
+  border: 1px solid navy;
+}
+
+button[type="submit"]:hover {
+  background-color: #ffffff;
+}
+
+/* Pseudo-element ::after - Marks mandatory form field labels with blue asterisk */
+label.required-field::after {
+  content: " *";
+  color: #38bdf8;
+  font-weight: bold;
+}
+
+/* 
+================================================================================
+CENTERING TECHNIQUE 3: Grid Centering
+Centering notice modal / box horizontally and vertically using CSS Grid place-items
+================================================================================
+*/
+.grid-centered-box {
+  display: grid;
+  place-items: center;
+  background-color: #0f172a;
+  padding: 15px;
+  border: 1px solid navy;
+  border-radius: 6px;
+  text-align: center;
+  margin-top: 15px;
+}
+
+/* Terminal output pre styling */
+pre {
+  background-color: #000000;
+  color: #38bdf8;
+  padding: 15px;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 14px;
+}
