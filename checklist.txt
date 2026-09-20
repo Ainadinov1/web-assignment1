@@ -1,80 +1,98 @@
 ================================================================================
-HTML BASICS ASSIGNMENT 1 — TAG CHECKLIST
-Student: Dias Tursynbay
+CSS FUNDAMENTALS & LAYOUTS ASSIGNMENT 2 — CHECKLIST
+Students: Dias Tursynbay & Adilet Ainadinov
+Theme: QazaqPeek Cyber Club Astana (Kenesary St 69)
 ================================================================================
 
-TAG / ELEMENT         FILE              LINE NUMBER(S)    WRITTEN BY
+1. SELECTORS & SPECIFICITY
 --------------------------------------------------------------------------------
-<!DOCTYPE html>       index.html        Line 1            Dias Tursynbay
-<html lang="en">      index.html        Line 3            Dias Tursynbay
-<head>                index.html        Line 4            Dias Tursynbay
-<meta charset>        index.html        Line 5            Dias Tursynbay
-<meta viewport>       index.html        Line 6            Dias Tursynbay
-<meta author>         index.html        Line 7            Dias Tursynbay
-<meta description>    index.html        Line 8            Dias Tursynbay
-<title>               index.html        Line 9            Dias Tursynbay
-<header>              index.html        Line 13           Dias Tursynbay
-<h1>                  index.html        Line 14           Dias Tursynbay
-<nav>                 index.html        Line 15           Dias Tursynbay
-<main>                index.html        Line 24           Dias Tursynbay
-<section>             index.html        Line 30           Dias Tursynbay
-<article>             index.html        Line 33           Dias Tursynbay
-<strong>              index.html        Line 36           Dias Tursynbay
-<em>                  index.html        Line 36           Dias Tursynbay
-<abbr>                index.html        Line 36           Dias Tursynbay
-<b>                   index.html        Line 39           Dias Tursynbay
-<mark>                index.html        Line 39           Dias Tursynbay
-<i>                   index.html        Line 39           Dias Tursynbay
-<small>               index.html        Line 42           Dias Tursynbay
-<sub>                 index.html        Line 42           Dias Tursynbay
-<blockquote>          index.html        Line 47           Dias Tursynbay
-<q>                   index.html        Line 48           Dias Tursynbay
-<cite>                index.html        Line 49           Dias Tursynbay
-<hr>                  index.html        Line 53           Dias Tursynbay
-<figure>              index.html        Line 57           Dias Tursynbay
-<img>                 index.html        Line 58           Dias Tursynbay
-<figcaption>          index.html        Line 59           Dias Tursynbay
-<aside>               index.html        Line 73           Dias Tursynbay
-<footer>              index.html        Line 83           Dias Tursynbay
+REQUIREMENT ITEM            FILE PATH         LINE NUMBER(S)   WRITTEN BY
 --------------------------------------------------------------------------------
-<table>               services.html     Line 36           Dias Tursynbay
-<caption>             services.html     Line 37           Dias Tursynbay
-<thead>               services.html     Line 38           Dias Tursynbay
-<tbody>               services.html     Line 48           Dias Tursynbay
-<tr>                  services.html     Line 39           Dias Tursynbay
-<th scope="col">      services.html     Line 40           Dias Tursynbay
-<th scope="row">      services.html     Line 49           Dias Tursynbay
-<td>                  services.html     Line 50           Dias Tursynbay
-<ul> (nested)         services.html     Line 75           Dias Tursynbay
-<ol> (with attr)      services.html     Line 92           Dias Tursynbay
-<dl>                  services.html     Line 101          Dias Tursynbay
-<dt>                  services.html     Line 102          Dias Tursynbay
-<dd>                  services.html     Line 103          Dias Tursynbay
-<div> (with comment)  services.html     Line 113          Dias Tursynbay
+Type Selector (body)        css/base.css      Line 28          Dias & Adilet
+Class Selector              css/dias.css      Line 19          Dias Tursynbay
+ID Selector                 css/dias.css      Line 23          Dias Tursynbay
+Descendant Selector         css/base.css      Line 83          Dias & Adilet
+Child Selector (>)          css/base.css      Line 65          Dias & Adilet
+Adjacent Sibling (+)        css/base.css      Line 119         Dias & Adilet
+Grouping Selector (,)       css/base.css      Line 40          Dias & Adilet
+Attribute Selector (a[])    css/dias.css      Line 134         Dias Tursynbay
+Attribute Selector (input)  css/adilet.css    Line 74          Adilet Ainadinov
+Universal Selector (*)      css/base.css      Line 16          Dias & Adilet
+Pseudo-class :hover         css/base.css      Line 107         Dias & Adilet
+Pseudo-class :focus         css/adilet.css    Line 93          Adilet Ainadinov
+Pseudo-class :nth-child     css/base.css      Line 155         Dias & Adilet
+Pseudo-element ::before     css/dias.css      Line 140         Dias Tursynbay
+Pseudo-element ::after      css/adilet.css    Line 120         Adilet Ainadinov
 --------------------------------------------------------------------------------
-<form>                booking.html      Line 35           Dias Tursynbay
-<fieldset>            booking.html      Line 36           Dias Tursynbay
-<legend>              booking.html      Line 37           Dias Tursynbay
-<label>               booking.html      Line 40           Dias Tursynbay
-<input type="text">   booking.html      Line 41           Dias Tursynbay
-<input type="email">  booking.html      Line 46           Dias Tursynbay
-<input type="tel">    booking.html      Line 51           Dias Tursynbay
-<input type="date">   booking.html      Line 56           Dias Tursynbay
-<input type="number"> booking.html      Line 61           Dias Tursynbay
-<input type="radio">  booking.html      Line 66           Dias Tursynbay
-<select>              booking.html      Line 75           Dias Tursynbay
-<option>              booking.html      Line 76           Dias Tursynbay
-<textarea>            booking.html      Line 84           Dias Tursynbay
-<span> (with comment) booking.html      Line 89           Dias Tursynbay
-<input type="checkbox booking.html      Line 88           Dias Tursynbay
-<button type="submit" booking.html      Line 93           Dias Tursynbay
-<button type="reset"> booking.html      Line 94           Dias Tursynbay
-<a> (target, rel)     booking.html      Line 29           Dias Tursynbay
-<a> (tel link)        booking.html      Line 29           Dias Tursynbay
-<a> (mailto link)     booking.html      Line 29           Dias Tursynbay
+
+2. CLASSES AND IDS
 --------------------------------------------------------------------------------
-<code>                colophon.html     Line 45           Dias Tursynbay
-<kbd>                 colophon.html     Line 38           Dias Tursynbay
-<pre>                 colophon.html     Line 50           Dias Tursynbay
-<samp>                colophon.html     Line 51           Dias Tursynbay
+CLASS / ID NAME             FILE PATH         LINE NUMBER(S)   WRITTEN BY
+--------------------------------------------------------------------------------
+.hero-center-box            css/dias.css      Line 37          Dias Tursynbay
+.facility-container         css/dias.css      Line 51          Dias Tursynbay
+.facility-card              css/dias.css      Line 60          Dias Tursynbay
+.badge-popular              css/dias.css      Line 71          Dias Tursynbay
+.floated-facility-img       css/dias.css      Line 85          Dias Tursynbay
+.clear-after-float          css/dias.css      Line 97          Dias Tursynbay
+.events-grid                css/dias.css      Line 109         Dias Tursynbay
+.colophon-grid              css/adilet.css    Line 17          Adilet Ainadinov
+.form-row-flex              css/adilet.css    Line 46          Adilet Ainadinov
+.grid-centered-box          css/adilet.css    Line 132         Adilet Ainadinov
+#about-section (ID 1)       index.html        Line 38          Dias Tursynbay
+#hours-section (ID 2)       index.html        Line 84          Dias Tursynbay
+#services-section (ID 3)    services.html     Line 26          Dias Tursynbay
+--------------------------------------------------------------------------------
+
+3. COLORS, FONTS, SPACING, & ALIGNMENT
+--------------------------------------------------------------------------------
+REQUIREMENT ITEM            FILE PATH         LINE NUMBER(S)   WRITTEN BY
+--------------------------------------------------------------------------------
+5-Color Palette Comment     css/base.css      Lines 6-11       Dias & Adilet
+Font Stack 1 (Body)         css/base.css      Line 29          Dias & Adilet
+Font Stack 2 (Headings)     css/base.css      Line 41          Dias & Adilet
+Box Model (box-sizing)      css/base.css      Line 17          Dias & Adilet
+Margin Collapse Comment     css/base.css      Lines 22-25      Dias & Adilet
+--------------------------------------------------------------------------------
+
+4. PRIORITY & CASCADE DEMONSTRATIONS
+--------------------------------------------------------------------------------
+REQUIREMENT ITEM            FILE PATH         LINE NUMBER(S)   WRITTEN BY
+--------------------------------------------------------------------------------
+Internal Style Block        colophon.html     Lines 16-21      Adilet Ainadinov
+Inline Style Attribute      services.html     Line 118         Dias Tursynbay
+!important (Single Use)     css/base.css      Line 173         Dias & Adilet
+Specificity Experiment      css/dias.css      Lines 11-25      Dias Tursynbay
+--------------------------------------------------------------------------------
+
+5. FLEXBOX & GRID LAYOUTS
+--------------------------------------------------------------------------------
+REQUIREMENT ITEM            FILE PATH         LINE NUMBER(S)   WRITTEN BY
+--------------------------------------------------------------------------------
+Nav Flex Row (justify, gap) css/base.css      Lines 86-90      Dias & Adilet
+Dias Flexbox (wrap, grow)   css/dias.css      Lines 51-61      Dias Tursynbay
+Adilet Flexbox (form row)   css/adilet.css    Lines 46-56      Adilet Ainadinov
+flex-direction property     css/dias.css      Line 53          Dias Tursynbay
+Dias Grid (fr, repeat, gap) css/dias.css      Lines 109-114    Dias Tursynbay
+Dias Grid Column Span (2)   css/dias.css      Line 118         Dias Tursynbay
+Dias Grid vs Flex Comment   css/dias.css      Lines 103-107    Dias Tursynbay
+Adilet Grid (minmax, fr)    css/adilet.css    Lines 17-22      Adilet Ainadinov
+Adilet Grid Column Span (2) css/adilet.css    Line 26          Adilet Ainadinov
+Adilet Grid vs Flex Comment css/adilet.css    Lines 11-15      Adilet Ainadinov
+--------------------------------------------------------------------------------
+
+6. POSITIONING, FLOAT, CLEAR, & CENTERING
+--------------------------------------------------------------------------------
+REQUIREMENT ITEM            FILE PATH         LINE NUMBER(S)   WRITTEN BY
+--------------------------------------------------------------------------------
+Position: static (commented)css/dias.css      Line 32          Dias Tursynbay
+Position: relative          css/dias.css      Line 67          Dias Tursynbay
+Position: absolute          css/dias.css      Line 72          Dias Tursynbay
+Position: fixed             css/base.css      Line 179         Dias & Adilet
+Floated Image               css/dias.css      Line 86          Dias Tursynbay
+Clear Property              css/dias.css      Line 98          Dias Tursynbay
+Float Clear Comment         css/dias.css      Lines 93-96      Dias Tursynbay
+Centering 1 (margin auto)   css/base.css      Line 75          Dias & Adilet
+Centering 2 (Flexbox)       css/dias.css      Lines 37-40      Dias Tursynbay
+Centering 3 (CSS Grid)      css/adilet.css    Lines 132-134    Adilet Ainadinov
 ================================================================================
