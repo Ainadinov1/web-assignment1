@@ -20,7 +20,6 @@ We styled all 6 pages of our website using pure CSS without any CSS frameworks l
 
 * **Both Students Together**:
   - `css/base.css` (Shared colors, font stacks, header navigation flex row, footer styling)
-  - Hand-drawn layout sketches in `sketches/` folder
   - Screenshots in `screenshots/` folder
 
 ## Stylesheet Architecture
@@ -52,6 +51,5 @@ Every HTML file links `base.css` first and the personal stylesheet second to sho
 * `css/adilet.css`: Adilet's stylesheet
 * `checklist.txt`: Tag and CSS property line inventory
 * `ai_log.md`: AI interaction log
-* `sketches/`: Hand-drawn layout sketches
 * `screenshots/`: Before and after styling screenshots
 * `images/`: Local photos from Kenesary 69
