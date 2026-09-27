@@ -1,6 +1,6 @@
-# AI Interaction Log — Web Assignment 2
+# AI Interaction Log — Web Assignments 2 & 3
 
-In accordance with course AI policy, this log records questions asked to AI during the development of Assignment 2 (CSS Fundamentals & Layouts).
+In accordance with course AI policy, this log records questions asked to AI during the development of Assignment 2 (CSS Fundamentals) and Assignment 3 (Bootstrap 5 Responsive Layouts).
 
 ## Session 1 — September 18, 2026
 * **Prompt:** How do CSS Grid `minmax()` and `repeat(auto-fit, ...)` work together for responsive cards without media queries?
@@ -13,3 +13,15 @@ In accordance with course AI policy, this log records questions asked to AI duri
 ## Session 3 — September 20, 2026
 * **Prompt:** How to calculate CSS selector specificity for `(0, 1, 1, 0)` versus `(0, 0, 1, 0)`?
 * **Response Summary:** Specificity is measured as (inline, IDs, classes/attributes/pseudo-classes, type/elements). `(0, 1, 1, 0)` has one ID and one class selector, which beats `(0, 0, 1, 0)` which only has one class selector regardless of rule order in the stylesheet.
+
+## Session 4 — September 27, 2026 (Assignment 3)
+* **Prompt:** How do Bootstrap 5 container and container-fluid differ, and when should each be chosen?
+* **Response Summary:** `.container` has a max-width responsive cap at each breakpoint, centering content on large screens. `.container-fluid` takes 100% width across all viewports, ideal for wide data tables or pricing matrices.
+
+## Session 5 — September 27, 2026 (Assignment 3)
+* **Prompt:** How to structure Bootstrap 5 responsive grid column classes like `col-12 col-md-6 col-lg-4`?
+* **Response Summary:** Mobile screens (<768px) stack 1 item per row (`col-12`), tablets (>=768px) display 2 items per row (`col-md-6`), and desktop screens (>=992px) display 3 items per row (`col-lg-4`).
+
+## Session 6 — September 27, 2026 (Assignment 3)
+* **Prompt:** How to customize Bootstrap Accordion components using dark utility background classes?
+* **Response Summary:** Add `bg-dark`, `text-light`, and `bg-custom-card` classes to `.accordion-item` and `.accordion-button` to blend the official Bootstrap accordion markup seamlessly into dark gaming lounge color themes.
