@@ -3,7 +3,6 @@
 QAZAQPEEK CYBER CLUB - ADILET AINADINOV'S STYLESHEET (adilet.css)
 Student: Adilet Ainadinov
 Bootstrap 5.3 Correction Layer
-================================================================================
 */
 
 :root {
@@ -36,6 +35,30 @@ pre {
   overflow-x: auto;
   font-family: 'Courier New', Courier, monospace;
   font-size: 14px;
+QAZAQPEEK CYBER CLUB - ADILET'S CORRECTION LAYER (css/adilet.css)
+Author: Adilet Ainadinov
+Minimal custom styles for Booking, Login, and PC Specs pages.
+*/
+
+/* Custom form container background */
+.adilet-form-card {
+  background-color: #1e293b;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Custom table header styling override */
+.table-dark th {
+  color: #38bdf8;
+  border-bottom: 2px solid #334155;
+}
+
+/* Back to top floating button adjustment */
+.back-to-top-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1030;
 }
 
 /* Minor card polish */

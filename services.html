@@ -5,136 +5,214 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="author" content="Dias Tursynbay">
-  <meta name="description" content="Detailed hardware specifications, hourly rates, and competitive boot camp pricing at QazaqPeek Cyber Club in Astana.">
+  <meta name="description" content="Pricing matrix, zone specifications, and tariff packages for QazaqPeek Cyber Club in Astana on Kenesary 69.">
   <title>QazaqPeek Cyber Club - Zones &amp; Tariffs</title>
-  <!-- Link base.css first and personal stylesheet second for cascade load order -->
+  
+  <!-- Bootstrap 5.3.3 CDN link linked before custom stylesheet so custom rules override where needed -->
+  <!-- Bootstrap 5.3.3 CDN used for responsive layout, container-fluid, nested grid, accordion component, and utility styling -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom stylesheets linked after Bootstrap CDN -->
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/dias.css">
 </head>
-<body>
+<body class="bg-dark text-light">
 
+  <!-- Responsive Navigation Header using Bootstrap Navbar with Toggler -->
   <header>
-    <h1>QazaqPeek Cyber Club Astana</h1>
-    <nav>
-      <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="services.html">Zones &amp; Tariffs</a></li>
-        <li><a href="events.html">Events</a></li>
-        <li><a href="booking.html">Book a Station</a></li>
-        <li><a href="login.html">Login / Register</a></li>
-        <li><a href="colophon.html">Colophon</a></li>
-      </ul>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-secondary bg-opacity-25 border-bottom border-secondary shadow-sm py-3">
+      <div class="container">
+        <a class="navbar-brand fw-bold text-accent" href="index.html">QazaqPeek Cyber Club</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNavbar">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0 gap-2">
+            <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+            <li class="nav-item"><a class="nav-link active fw-bold text-accent" href="services.html">Zones &amp; Tariffs</a></li>
+            <li class="nav-item"><a class="nav-link" href="events.html">Events</a></li>
+            <li class="nav-item"><a class="nav-link" href="booking.html">Book a Station</a></li>
+            <li class="nav-item"><a class="nav-link" href="login.html">Login / Register</a></li>
+            <li class="nav-item"><a class="nav-link" href="pc-specs.html">PC Specs</a></li>
+          </ul>
+        </div>
+      </div>
     </nav>
   </header>
 
-  <main>
-    <section id="services-section">
-      <h2 class="section-subtitle">Gaming Areas &amp; Hourly Rates</h2>
-      <article>
-        <!-- Element used for specificity experiment in dias.css -->
-        <h3 class="tariff-card-header">Tiered Battle Stations</h3>
-        <p>
-          At QazaqPeek, our hardware packages are split into distinct tiers tailored for different budgets and competitive intensity. Our Standard Hall provides high frame rates for everyday multiplayer sessions, while our VIP and Boot Camp suites feature tournament monitors running at <strong>360Hz</strong> alongside sound-isolated booths.
-        </p>
-        <p>
-          All visitors pay through a unified guest account balance. Night packages guarantee a reserved desk from 22:00 until 08:00 the following morning. All rates are listed in Kazakhstani Tenge (KZT).
-        </p>
-      </article>
+  <!-- Container Choice Comment: Chosen container-fluid over container here to allow maximum horizontal space for tariff tables and pricing matrices across desktop monitors -->
+  <main class="container-fluid px-4 py-4">
 
-      <table class="tariff-table">
-        <caption>Official Pricing Matrix at Kenesary 69 (Effective September 2026)</caption>
-        <thead>
-          <tr>
-            <th scope="col">Zone Tier</th>
-            <th scope="col">Graphics Card</th>
-            <th scope="col">Monitor Spec</th>
-            <th scope="col">Hourly Rate</th>
-            <th scope="col">Night Package (22:00–08:00)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row">Standard</th>
-            <td>RTX 4060</td>
-            <td>240Hz IPS Full HD</td>
-            <td>800 KZT</td>
-            <td>3,000 KZT</td>
-          </tr>
-          <tr>
-            <th scope="row">VIP 1</th>
-            <td>RTX 5060</td>
-            <td>280Hz Fast IPS 2K</td>
-            <td>1,200 KZT</td>
-            <td>4,000 KZT</td>
-          </tr>
-          <tr>
-            <th scope="row">VIP 2</th>
-            <td>RTX 5060 TI</td>
-            <td>360Hz OLED Esports</td>
-            <td>1,500 KZT</td>
-            <td>5,000 KZT</td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
+    <!-- Page Title Header -->
+    <div class="dias-hero-banner p-4 mb-4 rounded-3 shadow">
+      <h1 class="display-6 fw-bold text-accent mb-2 text-center text-md-start">Esports Gaming Zones &amp; Hourly Tariffs</h1>
+      <p class="lead text-light mb-0 text-center text-md-start">
+        Transparent pricing, night packages, and room configurations at Kenesary Street 69.
+      </p>
+    </div>
 
-    <hr>
+    <!-- Grid Nesting Demonstration: Nesting a .row inside a .col-lg-8 column -->
+    <section class="mb-5">
+      <h2 class="h3 fw-bold text-accent mb-3 border-bottom border-secondary pb-2">Featured Tariff Packages</h2>
+      
+      <div class="row g-4">
+        <!-- Outer Left Column (8 units wide on desktop) containing NESTED ROW -->
+        <div class="col-12 col-lg-8">
+          
+          <!-- Nested Grid Row inside column -->
+          <!-- Comment on Nesting: Here we nest a row inside col-lg-8 to split featured packages into 2 side-by-side cards -->
+          <div class="row g-3">
+            <div class="col-12 col-md-6">
+              <div class="card bg-custom-card text-light h-100 border-secondary shadow-sm">
+                <div class="card-header bg-dark d-flex justify-content-between align-items-center">
+                  <h3 class="h5 mb-0 fw-bold">Standard Arena</h3>
+                  <span class="badge bg-info text-dark">240Hz</span>
+                </div>
+                <div class="card-body">
+                  <p class="h4 fw-bold text-accent mb-2">700 KZT <span class="fs-6 text-muted">/ hr</span></p>
+                  <p class="small text-light">Full access to Standard Zone PCs, mechanical keyboards, and 240Hz monitors.</p>
+                  <a href="booking.html" class="btn btn-outline-info btn-sm">Book Standard</a>
+                </div>
+              </div>
+            </div>
 
-    <section>
-      <h2>Hardware Setup &amp; Account Guidelines</h2>
+            <div class="col-12 col-md-6">
+              <div class="card bg-custom-card text-light h-100 border-info shadow-sm">
+                <div class="card-header bg-dark d-flex justify-content-between align-items-center">
+                  <h3 class="h5 mb-0 fw-bold text-accent">VIP Pro Zone</h3>
+                  <span class="badge bg-warning text-dark">360Hz</span>
+                </div>
+                <div class="card-body">
+                  <p class="h4 fw-bold text-accent mb-2">1,200 KZT <span class="fs-6 text-muted">/ hr</span></p>
+                  <p class="small text-light">RTX 4080 Super rigs, 360Hz DyAc monitors, and noise-isolated sound booths.</p>
+                  <a href="booking.html" class="btn btn-primary btn-sm">Book VIP Seat</a>
+                </div>
+              </div>
+            </div>
+          </div>
 
-      <h3>Standard Station Equipment</h3>
-      <ul>
-        <li>Standard &amp; VIP Peripherals
-          <ul>
-            <li>HyperX Alloy Origins Mechanical Keyboard</li>
-            <li>Logitech G Pro X Superlight Optical Mouse</li>
-            <li>HyperX Cloud II Pro Gaming Headset</li>
-          </ul>
-        </li>
-        <li>Comfort Amenities
-          <ul>
-            <li>DXRacer breathable mesh ergonomic chair</li>
-            <li>Extra-large 900x400mm micro-weave desk pad</li>
-          </ul>
-        </li>
-      </ul>
+        </div>
 
-      <h3>How to Top Up Your Balance</h3>
-      <ol type="1" start="1">
-        <li>Approach the reception desk at the entrance or open Kaspi terminal app.</li>
-        <li>Provide your registered mobile number or scan your membership QR code.</li>
-        <li>Deposit cash or confirm mobile transfer for your chosen hours.</li>
-        <li>Take your seat, press the power button, and enter your login password.</li>
-      </ol>
-
-      <h3>Esports Club Glossary</h3>
-      <dl>
-        <dt class="glossary-term">Boot Camp</dt>
-        <dd>An isolated private room with five identically configured computers dedicated to professional team training and tournament qualifiers.</dd>
-        <dt class="glossary-term">LAN Cache</dt>
-        <dd>A dedicated local server that updates major competitive games at gigabit speeds so guests never wait for client patches.</dd>
-        <dt class="glossary-term">Night Package</dt>
-        <dd>A discounted flat-rate session granting continuous desk access from 22:00 until 08:00 the following morning.</dd>
-      </dl>
-
-      <!-- 
-        EXACTLY ONE INLINE STYLE DEMONSTRATION WITH COMMENT:
-        This inline style attribute exists strictly to demonstrate cascade priority in CSS.
-        It overrides the default border-left color defined in the external stylesheet for .notice-box.
-      -->
-      <div class="static-text-block" style="border-left: 4px solid #38bdf8; padding-left: 10px; margin-top: 15px;">
-        <p><small>Notice: Unused prepaid minutes roll over to your club balance and do not expire within 90 days.</small></p>
+        <!-- Outer Right Column (4 units wide on desktop) -->
+        <div class="col-12 col-lg-4">
+          <div class="bg-custom-card p-4 rounded-3 border border-secondary h-100 shadow-sm">
+            <h3 class="h5 fw-bold text-accent mb-2">Night Package Special</h3>
+            <p class="display-6 fw-bold text-light mb-2">3,500 <span class="fs-5 text-muted">KZT</span></p>
+            <p class="small text-light mb-3">8 Hours of uninterrupted play from 22:00 to 06:00 (Includes energy drink or coffee).</p>
+            <a href="booking.html" class="btn btn-info btn-sm fw-bold text-dark w-100">Reserve Night Pass</a>
+          </div>
+        </div>
       </div>
     </section>
+
+    <!-- Detailed Tariff Matrix Table -->
+    <section class="mb-5">
+      <h2 class="h3 fw-bold text-accent mb-3 border-bottom border-secondary pb-2">Complete Rate Card &amp; Specs</h2>
+      
+      <div class="table-responsive">
+        <table class="table table-dark table-striped table-hover table-bordered mb-0 align-middle">
+          <thead>
+            <tr>
+              <th scope="col">Zone Name</th>
+              <th scope="col">Monitors &amp; GPU</th>
+              <th scope="col">Hourly Rate</th>
+              <th scope="col">3-Hour Pass</th>
+              <th scope="col">Night Pass (22:00-06:00)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Standard Zone</th>
+              <td>240Hz ASUS &bull; RTX 4070</td>
+              <td>700 KZT</td>
+              <td>1,800 KZT</td>
+              <td>3,500 KZT</td>
+            </tr>
+            <tr>
+              <th scope="row">VIP Lounge</th>
+              <td>360Hz BenQ &bull; RTX 4080 Super</td>
+              <td>1,200 KZT</td>
+              <td>3,200 KZT</td>
+              <td>6,000 KZT</td>
+            </tr>
+            <tr>
+              <th scope="row">Bootcamp Team Room</th>
+              <td>5x 360Hz Rigs &bull; Scrim Setup</td>
+              <td>5,000 KZT (5 PCs)</td>
+              <td>13,500 KZT</td>
+              <td>24,000 KZT</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Bootstrap Component: Accordion -->
+    <!-- Component Name: Bootstrap Accordion -->
+    <!-- Modifications: Adapted markup from official Bootstrap 5 documentation for QazaqPeek Club Rules & Frequently Asked Questions, custom styled with dark background utility classes -->
+    <section class="mb-5">
+      <h2 class="h3 fw-bold text-accent mb-3 border-bottom border-secondary pb-2">Club Guidelines &amp; FAQ</h2>
+      
+      <div class="accordion accordion-flush rounded border border-secondary shadow-sm" id="rulesAccordion">
+        
+        <div class="accordion-item bg-dark text-light border-secondary">
+          <h3 class="accordion-header" id="headingOne">
+            <button class="accordion-button bg-custom-card text-light collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-label="Toggle Age Policy" aria-controls="collapseOne">
+              What is the age policy for night packages at Kenesary 69?
+            </button>
+          </h3>
+          <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#rulesAccordion">
+            <div class="accordion-body text-light">
+              According to local municipal laws in Astana, guests under 18 years of age are permitted in the club until 22:00. For night packages (22:00 - 06:00), guests must present physical photo identification.
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item bg-dark text-light border-secondary">
+          <h3 class="accordion-header" id="headingTwo">
+            <button class="accordion-button bg-custom-card text-light collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-label="Toggle Booking Policy" aria-controls="collapseTwo">
+              Can I bring my own gaming peripherals (mouse, headset, keyboard)?
+            </button>
+          </h3>
+          <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#rulesAccordion">
+            <div class="accordion-body text-light">
+              Yes! All stations have front-accessible USB 3.2 hubs and audio jacks. Administrators can assist you with quick driver setup for custom peripherals.
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item bg-dark text-light border-secondary">
+          <h3 class="accordion-header" id="headingThree">
+            <button class="accordion-button bg-custom-card text-light collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-label="Toggle Reservation Hold" aria-controls="collapseThree">
+              How long are online station reservations held?
+            </button>
+          </h3>
+          <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#rulesAccordion">
+            <div class="accordion-body text-light">
+              Station reservations are held for 15 minutes past the selected arrival time before being automatically released to walk-in guests.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
   </main>
 
-  <a href="#top" class="back-to-top">↑ Top</a>
+  <!-- Back to Top Button -->
+  <div class="back-to-top-btn">
+    <a href="#top" class="btn btn-info btn-sm shadow fw-bold text-dark">↑ Top</a>
+  </div>
 
-  <footer>
-    <p>QazaqPeek Cyber Club &bull; Kenesary St 69, Astana &bull; Tel: +7 (706) 605 5465</p>
-    <p>&copy; 2026 Dias Tursynbay &amp; Adilet Ainadinov. All rights reserved.</p>
+  <!-- Footer -->
+  <footer class="bg-secondary bg-opacity-25 border-top border-secondary py-4 text-center text-muted mt-5">
+    <div class="container">
+      <p class="mb-1 text-light">QazaqPeek Cyber Club &bull; Kenesary St 69, Astana &bull; Tel: +7 (706) 605 5465</p>
+      <p class="small mb-0">&copy; 2026 Dias Tursynbay &amp; Adilet Ainadinov. All rights reserved.</p>
+    </div>
   </footer>
 
+  <!-- Bootstrap 5.3.3 JavaScript Bundle CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
