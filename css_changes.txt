@@ -1,0 +1,55 @@
+================================================================================
+QAZAQPEEK CYBER CLUB - ASSIGNMENT 3 CSS REDUCTION INVENTORY
+Authors: Dias Tursynbay & Adilet Ainadinov
+================================================================================
+
+This document lists the custom CSS rules from Assignment 2 that were deleted 
+and replaced by Bootstrap 5.3.3 framework classes in Assignment 3.
+
+--------------------------------------------------------------------------------
+REMOVED CUSTOM CSS RULE               BOOTSTRAP 5.3.3 REPLACEMENT CLASS(ES)
+--------------------------------------------------------------------------------
+1. Navigation Flexbox
+   nav ul { display: flex;              .navbar, .navbar-expand-lg, 
+            flex-direction: row;        .navbar-nav, .nav-item, 
+            justify-content: center;    .nav-link, .navbar-toggler
+            gap: 15px; }
+
+2. Hand-written CSS Grid
+   .events-grid, .colophon-grid {       .row, .col-12, .col-md-6, .col-lg-4,
+     display: grid;                     .g-3, .g-4
+     grid-template-columns: repeat(...);
+     gap: 20px; }
+
+3. Image Floats & Clearing
+   .floated-facility-img { float: left } .row, .col-md-4, .col-md-8,
+   .clear-after-float { clear: left }    .img-fluid, .rounded
+
+4. Form Flexbox Rows
+   .form-row-flex { display: flex;      .row, .col-md-6, .form-floating,
+                    flex-wrap: wrap }   .form-control, .form-select
+
+5. Custom Button Styling
+   button, .btn-submit {                .btn, .btn-primary, .btn-outline-info,
+     background: #38bdf8; border: ... } .btn-lg, .btn-sm, .disabled
+
+6. Main Container Centering
+   main { max-width: 1000px;            .container, .container-fluid,
+          margin: 20px auto }           .py-4, .px-4
+
+7. Custom Badge Positioning
+   .badge-popular { position: absolute; .badge, .bg-warning, .text-dark,
+                    background: ... }   .position-absolute, .top-0, .end-0
+
+8. Manual Spacing & Margins
+   margin-bottom: 25px;                 .my-4, .mb-3, .mb-4, .py-3, .p-4,
+   padding: 20px;                       .gap-3
+
+9. Custom Table Shading & Borders
+   table { width: 100% }                .table, .table-dark, .table-hover,
+   th, td { border: 1px solid }         .table-striped, .table-bordered
+
+10. Responsive Media Queries
+    @media (max-width: 768px)           Bootstrap responsive breakpoints
+                                        (col-sm, col-md, col-lg, d-none, d-md-block)
+================================================================================

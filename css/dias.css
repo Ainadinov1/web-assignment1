@@ -1,0 +1,28 @@
+/* 
+================================================================================
+QAZAQPEEK CYBER CLUB - DIAS'S CORRECTION LAYER (css/dias.css)
+Author: Dias Tursynbay
+Minimal custom styles for Home, Services, and Events pages.
+================================================================================
+*/
+
+/* Hero banner dark overlay refinement */
+.dias-hero-banner {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border-left: 4px solid #38bdf8;
+}
+
+/* Specificity demonstration comment preserved for record */
+/* (0,0,1,0) element rule vs (0,1,1,0) class rule resolved by cascade */
+.dias-card-highlight {
+  border-color: #38bdf8 !important;
+}
+
+/* Facility thumbnail zoom transition */
+.facility-img-thumb {
+  transition: transform 0.2s ease-in-out;
+}
+
+.facility-img-thumb:hover {
+  transform: scale(1.02);
+}

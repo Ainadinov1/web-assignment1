@@ -1,0 +1,38 @@
+/* 
+================================================================================
+QAZAQPEEK CYBER CLUB - BASE CORRECTION LAYER (css/base.css)
+Authors: Dias Tursynbay & Adilet Ainadinov
+Bootstrap 5.3.3 handles layout, grid, spacing, navigation, and components.
+This file contains minimal brand color overrides (<30 lines).
+================================================================================
+*/
+
+body {
+  background-color: #0f172a;
+  color: #f1f5f9;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+/* QazaqPeek Brand Accent Overrides */
+.navbar-brand {
+  font-weight: 700;
+  color: #38bdf8 !important;
+  letter-spacing: 0.5px;
+}
+
+/* Card & Dark Section Backgrounds */
+.bg-custom-card {
+  background-color: #1e293b;
+  border: 1px solid #334155;
+}
+
+/* Accent Color Links */
+a.text-accent, .text-accent {
+  color: #38bdf8 !important;
+}
+
+/* Subtle focus ring override */
+.form-control:focus, .form-select:focus, .btn:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 0.25rem rgba(56, 189, 248, 0.25);
+}

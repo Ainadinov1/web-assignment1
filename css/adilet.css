@@ -1,0 +1,128 @@
+/* ==========================================================================
+   QAZAQPEEK CYBER CLUB - BASE & CORRECTION LAYER
+   Bootstrap 5.3 Customizations and JS State Hooks
+   ========================================================================== */
+
+:root {
+  --qp-accent: #38bdf8;
+  --qp-dark-bg: #0f172a;
+  --qp-card-bg: #1e293b;
+  --qp-input-bg: #1e293b;
+  --qp-text: rgba(240, 242, 245, 0.95);
+  --qp-border: #334155;
+}
+
+/* --- Brand Accent Utilities --- */
+.text-accent {
+  color: var(--qp-accent) !important;
+}
+
+.bg-custom-card {
+  background-color: var(--qp-card-bg) !important;
+}
+
+/* --- Form Containers & Cards --- */
+/* Neutral naming replacing personal student prefixes */
+.custom-form-card,
+.adilet-form-card {
+  background-color: var(--qp-card-bg);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Subtle focus ring on Bootstrap inputs matching brand palette */
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--qp-accent);
+  box-shadow: 0 0 0 0.25rem rgba(56, 189, 248, 0.25);
+  background-color: var(--qp-input-bg);
+  color: #ffffff;
+}
+
+/* Mandatory form label marker via pseudo-element */
+label.required-field::after {
+  content: " *";
+  color: var(--qp-accent);
+  font-weight: bold;
+}
+
+/* --- Code & Preformatted Blocks --- */
+pre {
+  background-color: #000000;
+  color: var(--qp-accent);
+  padding: 15px;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 14px;
+  border: 1px solid var(--qp-border);
+}
+
+/* --- Table Styling Override --- */
+.table-dark th {
+  color: var(--qp-accent);
+  border-bottom: 2px solid var(--qp-border);
+}
+
+/* --- Fixed Floating Controls --- */
+.back-to-top-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1030;
+}
+
+/* --- Cards Hover Transition --- */
+.card {
+  transition: transform 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   MIDTERM CODE FREEZE: JAVASCRIPT STATE HOOKS
+   Pre-styled state classes for DOM manipulation in future assignments
+   ========================================================================== */
+
+/* State: Hidden elements (takes precedence over standard display) */
+.is-hidden,
+.hidden {
+  display: none !important;
+}
+
+/* State: Active interactive item / selected tab */
+.is-active,
+.active-item {
+  border-color: var(--qp-accent) !important;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.35);
+}
+
+/* State: Selected card or option */
+.is-selected,
+.selected {
+  outline: 2px solid var(--qp-accent) !important;
+  background-color: rgba(56, 189, 248, 0.08) !important;
+}
+
+/* State: Input / container validation error */
+.is-error {
+  border-color: #dc3545 !important;
+  color: #dc3545;
+  background-color: rgba(220, 53, 69, 0.05);
+}
+
+/* State: Success / confirmation state */
+.is-success {
+  border-color: #198754 !important;
+  color: #198754;
+  background-color: rgba(25, 135, 84, 0.05);
+}
+
+/* State: Disabled or loading state */
+.is-loading {
+  opacity: 0.6;
+  pointer-events: none;
+  cursor: wait;
+}
