@@ -1,10 +1,17 @@
 /**
  * ================================================================================
- * QAZAQPEEK CYBER CLUB ASTANA — SHARED SITE-WIDE SCRIPTS
+ * QAZAQPEEK CYBER CLUB ASTANA — SHARED SITE-WIDE SCRIPTS (JQUERY REWRITE)
  * File: js/main.js
  * Authors: Dias Tursynbay & Adilet Ainadinov
  * Purpose: Global navigation highlighting, 24/7 Astana venue status,
  *          floating back-to-top behavior, and shared toast notifications.
+ *
+ * jQuery Version: 3.7.1 (minified CDN loaded via code.jquery.com)
+ * Why $(function () { ... }) is needed:
+ *   $(function () { ... }) is jQuery's standard shorthand for $(document).ready().
+ *   It guarantees that the browser has fully parsed the HTML Document Object Model
+ *   before any selectors, traversal, or event handlers run, preventing null-reference
+ *   exceptions without waiting for heavy external assets (images, fonts) to finish.
  * ================================================================================
  */
 
@@ -35,7 +42,7 @@ function sanitizeString(input) {
   if (typeof input !== 'string') {
     return '';
   }
-  return input.trim();
+  return $.trim(input);
 }
 
 /**
@@ -54,7 +61,6 @@ function getAstanaClubStatus() {
   });
 
   const timeString = timeFormatter.format(now);
-  // Club is open 24 hours every day
   const isOpen = true;
   const statusText = `Open 24/7 • Astana Venue Time: ${timeString}`;
 
@@ -62,8 +68,7 @@ function getAstanaClubStatus() {
 }
 
 /**
- * Render a non-intrusive accessible feedback toast or message container.
- * Calls sanitizeString() internally.
+ * Render a non-intrusive accessible feedback toast notification using jQuery DOM & effects.
  * @param {string} title - Heading of the notice
  * @param {string} message - Feedback message
  * @param {'success'|'info'|'warning'|'error'} [type='info'] - State variant
@@ -71,117 +76,125 @@ function getAstanaClubStatus() {
 function displayGlobalToast(title, message, type = 'info') {
   const cleanTitle = sanitizeString(title);
   const cleanMessage = sanitizeString(message);
+  const alertVariant = type === 'error' ? 'danger' : type;
 
-  let toastContainer = document.getElementById('qp-global-toast-container');
-  if (!toastContainer) {
-    toastContainer = document.createElement('div');
-    toastContainer.id = 'qp-global-toast-container';
-    toastContainer.className = 'position-fixed bottom-0 end-0 p-3';
-    toastContainer.style.zIndex = '1080';
-    document.body.appendChild(toastContainer);
+  let $toastContainer = $('#qp-global-toast-container');
+  if ($toastContainer.length === 0) {
+    $toastContainer = $('<div id="qp-global-toast-container" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080;"></div>')
+      .appendTo('body');
   }
 
-  const toastCard = document.createElement('div');
-  toastCard.className = `alert alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show shadow-lg mb-2`;
-  toastCard.setAttribute('role', 'alert');
+  // Create toast element using jQuery DOM creation
+  const $toastCard = $(`
+    <div class="alert alert-${alertVariant} alert-dismissible fade show shadow-lg mb-2" role="alert">
+      <strong class="d-block mb-1"></strong>
+      <span class="toast-message-body"></span>
+      <button type="button" class="btn-close" aria-label="Close"></button>
+    </div>
+  `).hide();
 
-  const titleEl = document.createElement('strong');
-  titleEl.className = 'd-block mb-1';
-  titleEl.textContent = cleanTitle;
+  // Safely populate text content using .text()
+  $toastCard.find('strong').text(cleanTitle);
+  $toastCard.find('.toast-message-body').text(cleanMessage);
 
-  const msgEl = document.createElement('span');
-  msgEl.textContent = cleanMessage;
-
-  const closeBtn = document.createElement('button');
-  closeBtn.type = 'button';
-  closeBtn.className = 'btn-close';
-  closeBtn.setAttribute('aria-label', 'Close');
-  closeBtn.addEventListener('click', () => {
-    toastCard.remove();
+  // Close handler with jQuery effect and callback
+  $toastCard.find('.btn-close').on('click', function () {
+    $toastCard.fadeOut(200, function () {
+      $(this).remove();
+    });
   });
 
-  toastCard.appendChild(titleEl);
-  toastCard.appendChild(msgEl);
-  toastCard.appendChild(closeBtn);
-  toastContainer.appendChild(toastCard);
+  // Append and smoothly reveal
+  $toastCard.appendTo($toastContainer).fadeIn(300);
 
-  // Auto-remove after 4.5 seconds
-  setTimeout(() => {
-    if (toastCard.parentElement) {
-      toastCard.classList.remove('show');
-      setTimeout(() => toastCard.remove(), 250);
+  // Auto-remove after 4.5 seconds with fadeOut effect and removal callback
+  setTimeout(function () {
+    if ($toastCard.parent().length) {
+      $toastCard.fadeOut(250, function () {
+        $(this).remove();
+      });
     }
   }, 4500);
 }
 
 /**
- * 2. INITIALIZATION ROUTINES
+ * 2. JQUERY INITIALIZATION ROUTINES
  */
 
 /**
  * Synchronize the active state on top navigation links based on current pathname.
+ * Uses jQuery traversal (.each()), attribute inspection (.attr()), and class switching (.addClass(), .removeClass()).
  */
 function syncActiveNavigation() {
-  const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
-  if (!navLinks || navLinks.length === 0) return;
+  const $navLinks = $('.navbar-nav .nav-link');
+  if ($navLinks.length === 0) return;
 
   const currentPath = window.location.pathname.toLowerCase();
   const currentFile = currentPath.substring(currentPath.lastIndexOf('/') + 1) || 'index.html';
 
-  navLinks.forEach(link => {
-    const href = link.getAttribute('href');
+  $navLinks.each(function () {
+    const $link = $(this);
+    const href = $link.attr('href');
     if (!href) return;
     const linkFile = href.substring(href.lastIndexOf('/') + 1);
 
     if (linkFile === currentFile || (currentFile === '' && linkFile === 'index.html')) {
-      link.classList.add('active');
-      link.setAttribute('aria-current', 'page');
+      $link.addClass('active').attr('aria-current', 'page');
     } else {
-      link.classList.remove('active');
-      link.removeAttribute('aria-current');
+      $link.removeClass('active').removeAttr('aria-current');
     }
   });
 }
 
 /**
- * Display club operating hours status badge in the navbar or top banner.
+ * Display club operating hours status badge in the navbar brand area.
+ * Uses jQuery DOM injection (.insertAfter()) and .text().
  */
 function renderAstanaStatusBadge() {
   const statusInfo = getAstanaClubStatus();
-  const brandEl = document.querySelector('.navbar .navbar-brand');
+  const $brandEl = $('.navbar .navbar-brand');
 
-  if (brandEl && !document.getElementById('club-live-status')) {
-    const statusBadge = document.createElement('span');
-    statusBadge.id = 'club-live-status';
-    statusBadge.className = 'badge bg-success bg-opacity-25 text-success border border-success ms-2 small d-none d-lg-inline-block';
-    statusBadge.textContent = `● ${statusInfo.statusText}`;
-    brandEl.parentNode.insertBefore(statusBadge, brandEl.nextSibling);
+  if ($brandEl.length && $('#club-live-status').length === 0) {
+    $('<span id="club-live-status" class="badge bg-success bg-opacity-25 text-success border border-success ms-2 small d-none d-lg-inline-block"></span>')
+      .text(`● ${statusInfo.statusText}`)
+      .insertAfter($brandEl);
   }
 }
 
 /**
  * Initialize smooth scroll behavior on back-to-top floating button.
+ * Uses jQuery event listeners (.on('scroll'), .on('click')),
+ * effects (.fadeIn(200), .fadeOut(200), .animate()), and $(this).
  */
 function setupBackToTop() {
-  const backToTopBtn = document.querySelector('.back-to-top-btn');
-  if (!backToTopBtn) return;
+  const $backToTopBtn = $('.back-to-top-btn');
+  if ($backToTopBtn.length === 0) return;
 
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 300) {
-      backToTopBtn.classList.remove('hidden', 'd-none');
+  // Window scroll event listener
+  $(window).on('scroll', function () {
+    if ($(this).scrollTop() > 300) {
+      $backToTopBtn.removeClass('hidden d-none').fadeIn(200);
     } else {
-      backToTopBtn.classList.add('hidden');
+      $backToTopBtn.fadeOut(200, function () {
+        $(this).addClass('hidden');
+      });
     }
   });
 
-  backToTopBtn.addEventListener('click', (event) => {
+  // Smooth scroll to top via jQuery .animate()
+  $backToTopBtn.on('click', function (event) {
+    // Explanation: prevent default jump-to-hash navigation to allow smooth animated scrolling
     event.preventDefault();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    $('html, body').animate({ scrollTop: 0 }, 400);
   });
 }
 
-// Global DOM Content Loaded Listener
-document.addEventListener('DOMContentLoaded', () => {
+/**
+ * Global Document Ready Entry Point
+ * jQuery Version: 3.7.1
+ * Why needed: Guarantees DOM readiness before executing selectors and attaching event listeners.
+ */
+$(function () {
   syncActiveNavigation();
   renderAstanaStatusBadge();
   setupBackToTop();
