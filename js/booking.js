@@ -1,22 +1,30 @@
 /**
  * ================================================================================
- * QAZAQPEEK CYBER CLUB ASTANA — THEATER-STYLE SEATING MAP & BOOKING ENGINE
+ * QAZAQPEEK CYBER CLUB ASTANA — STATION RESERVATION CONTROLLER (JQUERY REWRITE)
  * File: js/booking.js
  * Author: Adilet Ainadinov
- * Features:
- *   - Visual Cyber Club Seating Map dynamically injected via JavaScript DOM methods
- *   - 20 Stations across Standard Arena, VIP 1 Lounge, and VIP 2 Bootcamp
- *   - Real-time Station Selection, Zone Sync & Party Size Auto-Adjustment
- *   - Live Price Calculator synchronizing tariff packages and duration
- *   - Complete 4-Field Form Validation + Date & Cross-field validations
- *   - Instant Demonstration Voucher with Math.random() Reference Code
+ *
+ * jQuery Version: 3.7.1 (minified CDN loaded via code.jquery.com)
+ * Why $(function () { ... }) is needed:
+ *   $(function () { ... }) is jQuery's standard shorthand for $(document).ready().
+ *   It guarantees that the browser has fully parsed the HTML Document Object Model
+ *   before any selectors, traversal, or event handlers run, preventing null-reference
+ *   exceptions without waiting for heavy external assets (images, fonts) to finish.
+ *
+ * Assignment 4 Highlights:
+ *   - Rewritten Feature 3: Complete Main Form Validation in jQuery (.on('submit'), inline errors)
+ *   - Dynamic Station Seating Engine built from array via jQuery (.append(), $.each())
+ *   - Delegated Event Handler: Parent container catches clicks on dynamically generated station buttons
+ *   - Traversal & Selectors: .closest(), .find(), .parent(), .siblings(), :not(), :checked
+ *   - Differences Explained: .text() vs .html(), .attr() vs .prop() on checkboxes
+ *   - Client vs Server Validation Comment
  * ================================================================================
  */
 
 'use strict';
 
 /**
- * 1. OFFICIAL VENUE PRICING MATRIX & SEATING DATA
+ * 1. VENUE PRICING MATRIX & RIG SPECIFICATIONS DATA ARRAYS
  */
 const BOOKING_PRICING = {
   hourly: { standard: 800, vip1: 1200, vip2: 1500, label: 'Hourly Rate' },
@@ -28,7 +36,7 @@ const BOOKING_PRICING = {
 };
 
 /**
- * Station map configuration: 20 real rigs
+ * Station map configuration: 20 real rigs across Standard, VIP 1, and VIP 2 zones
  */
 const CLUB_STATIONS = [
   // Standard Arena (A1 - A10)
@@ -57,7 +65,7 @@ const CLUB_STATIONS = [
 ];
 
 /**
- * 2. REUSABLE FUNCTIONS WITH PARAMETERS & RETURN VALUES
+ * 2. REUSABLE UTILITY FUNCTIONS
  */
 
 /**
@@ -84,103 +92,98 @@ function generateVoucherCode() {
   return `QP-2026-AST-${randomSuffix}`;
 }
 
+
 /**
- * 3. DOM SETUP & BOOKING LOGIC
+ * 3. JQUERY DOM SETUP & MAIN FORM CONTROLLER
+ * Wrapped in $(function () { ... }) (jQuery 3.7.1 DOM Ready)
  */
+$(function () {
+  const $bookingForm = $('#booking-form');
+  if ($bookingForm.length === 0) return;
 
-document.addEventListener('DOMContentLoaded', () => {
-  const bookingForm = document.getElementById('booking-form');
-  if (!bookingForm) return;
+  // Selected station IDs tracked in a Set
+  const selectedSeats = new Set();
 
-  // Midterm Prepared Form Controls
-  const zoneStandardRadio = document.getElementById('zone-standard');
-  const zoneVipRadio = document.getElementById('zone-vip');
-  const zoneBootcampRadio = document.getElementById('zone-bootcamp');
-  const timeSlotSelect = document.getElementById('time-slot');
-  const partySizeInput = document.getElementById('party-size');
-  const clientNameInput = document.getElementById('client-name');
-  const clientPhoneInput = document.getElementById('client-phone');
-  const clientEmailInput = document.getElementById('client-email');
-  const bookingDateInput = document.getElementById('booking-date');
-  const bookingTimeInput = document.getElementById('booking-time');
-  const specialNotesInput = document.getElementById('special-notes');
-  const policyAgreeCheckbox = document.getElementById('policy-agree');
-  const totalDisplay = document.getElementById('booking-total-display');
-  const confirmationAlert = document.getElementById('booking-confirmation');
-  const errorAlert = document.getElementById('booking-error');
+  // Cached jQuery element references
+  const $timeSlotSelect = $('#time-slot');
+  const $partySizeInput = $('#party-size');
+  const $clientNameInput = $('#client-name');
+  const $clientPhoneInput = $('#client-phone');
+  const $clientEmailInput = $('#client-email');
+  const $bookingDateInput = $('#booking-date');
+  const $bookingTimeInput = $('#booking-time');
+  const $policyAgreeCheckbox = $('#policy-agree');
+  const $totalDisplay = $('#booking-total-display');
+  const $confirmationAlert = $('#booking-confirmation');
+  const $errorAlert = $('#booking-error');
 
-  // Currently selected station IDs
-  let selectedSeats = new Set();
-
-  // Set min date to today
-  if (bookingDateInput) {
-    const today = new Date().toISOString().split('T')[0];
-    bookingDateInput.min = today;
-    if (!bookingDateInput.value) {
-      bookingDateInput.value = today;
-    }
+  // Set min date to today using jQuery .val() and .attr()
+  const todayStr = new Date().toISOString().split('T')[0];
+  $bookingDateInput.attr('min', todayStr);
+  if (!$bookingDateInput.val()) {
+    $bookingDateInput.val(todayStr);
   }
 
   // Pre-fill query parameters if routed from services.html
   const urlParams = new URLSearchParams(window.location.search);
   const paramZone = urlParams.get('zone');
-  if (paramZone === 'vip1' && zoneVipRadio) {
-    zoneVipRadio.checked = true;
-  } else if (paramZone === 'vip2' && zoneBootcampRadio) {
-    zoneBootcampRadio.checked = true;
+  if (paramZone === 'vip1') {
+    $('#zone-vip').prop('checked', true);
+  } else if (paramZone === 'vip2') {
+    $('#zone-bootcamp').prop('checked', true);
   }
 
   /**
-   * Determine currently active zone from radio buttons
+   * Determine currently active zone from radio buttons using :checked filter selector.
+   * Demonstrates: selector by attribute and filter :checked
+   * @returns {'standard'|'vip1'|'vip2'}
    */
   function getSelectedZone() {
-    if (zoneBootcampRadio && zoneBootcampRadio.checked) return 'vip2';
-    if (zoneVipRadio && zoneVipRadio.checked) return 'vip1';
-    return 'standard';
+    const checkedVal = $('input[name="zone_tier"]:checked').val();
+    return checkedVal || 'standard';
   }
 
   /**
-   * Recalculate and update the live total price display
+   * Recalculate and update the live total price display using jQuery .text().
+   * Demonstrates: .text() vs .html() (safely inserting formatted currency text).
    */
   function refreshTotalDisplay() {
     const zone = getSelectedZone();
-    const pkg = timeSlotSelect ? timeSlotSelect.value : 'hourly';
-    const count = selectedSeats.size > 0 ? selectedSeats.size : (parseInt(partySizeInput.value, 10) || 1);
+    const pkg = $timeSlotSelect.length ? $timeSlotSelect.val() : 'hourly';
+    const count = selectedSeats.size > 0 ? selectedSeats.size : (parseInt($partySizeInput.val(), 10) || 1);
     const total = calculateBookingPrice(zone, pkg, count);
+    const formatted = typeof formatKZT === 'function' ? formatKZT(total) : `${total} ₸`;
 
-    if (totalDisplay) {
-      totalDisplay.textContent = typeof formatKZT === 'function' ? formatKZT(total) : `${total} ₸`;
+    if ($totalDisplay.length) {
+      $totalDisplay.text(formatted);
     }
   }
 
-  // 4. DYNAMIC DOM INJECTION: THEATER SEATING MAP
-  // Injected at top of form inside a dedicated dark card
-  const seatingCard = document.createElement('div');
-  seatingCard.className = 'p-3 bg-dark bg-opacity-75 rounded border border-info mb-4 shadow-sm';
-  seatingCard.id = 'dynamic-seating-container';
 
-  const seatingHeader = document.createElement('div');
-  seatingHeader.className = 'd-flex flex-wrap justify-content-between align-items-center pb-2 mb-3 border-bottom border-secondary';
+  // 4. DYNAMIC DOM GENERATION: INTERACTIVE FLOOR MAP SEATING GRID
+  // Constructed entirely in code from CLUB_STATIONS array and appended to the form.
+  const $seatingCard = $(`
+    <div id="dynamic-seating-container" class="p-3 bg-dark bg-opacity-75 rounded border border-info mb-4 shadow-sm">
+      <div class="d-flex flex-wrap justify-content-between align-items-center pb-2 mb-3 border-bottom border-secondary">
+        <div>
+          <h3 class="h6 fw-bold text-accent mb-0">Interactive Floor Map: Select Your Stations</h3>
+          <span id="station-hover-preview" class="small text-muted">Hover over any station for hardware specs</span>
+        </div>
+        <div class="small d-flex gap-3 align-items-center mt-2 mt-sm-0">
+          <span><span class="badge bg-outline-info border border-info text-info me-1">□</span> Available</span>
+          <span><span class="badge bg-info text-dark me-1">■</span> Selected</span>
+          <span><span class="badge bg-secondary text-muted me-1">✕</span> Occupied</span>
+        </div>
+      </div>
+      <div class="station-grid-wrapper d-flex flex-column gap-3"></div>
+      <div id="selected-chips-row" class="mt-3 pt-2 border-top border-secondary small text-light d-flex flex-wrap align-items-center gap-2">
+        <span class="text-muted">Selected Stations:</span>
+        <span id="seats-chips-display" class="text-info fw-semibold">None (click available stations above)</span>
+      </div>
+    </div>
+  `);
 
-  const seatingTitle = document.createElement('h3');
-  seatingTitle.className = 'h6 fw-bold text-accent mb-0';
-  seatingTitle.textContent = 'Interactive Floor Map: Select Your Stations';
-
-  const legend = document.createElement('div');
-  legend.className = 'small d-flex gap-3 align-items-center mt-2 mt-sm-0';
-  legend.innerHTML = `
-    <span><span class="badge bg-outline-info border border-info text-info me-1">□</span> Available</span>
-    <span><span class="badge bg-info text-dark me-1">■</span> Selected</span>
-    <span><span class="badge bg-secondary text-muted me-1">✕</span> Occupied</span>
-  `;
-
-  seatingHeader.appendChild(seatingTitle);
-  seatingHeader.appendChild(legend);
-  seatingCard.appendChild(seatingHeader);
-
-  // Group stations by zone
-  const gridWrapper = document.createElement('div');
-  gridWrapper.className = 'd-flex flex-column gap-3';
+  const $gridWrapper = $seatingCard.find('.station-grid-wrapper');
 
   const zoneSections = [
     { zoneKey: 'standard', title: 'Standard Arena (A1 - A10)', badge: '800 ₸/hr • 280Hz' },
@@ -188,279 +191,413 @@ document.addEventListener('DOMContentLoaded', () => {
     { zoneKey: 'vip2', title: 'VIP 2 Bootcamp (C1 - C4)', badge: '1,500 ₸/hr • 360Hz' }
   ];
 
-  zoneSections.forEach(section => {
-    const rowBox = document.createElement('div');
-    rowBox.className = 'p-2 bg-dark rounded border border-secondary';
-
-    const rowHeader = document.createElement('div');
-    rowHeader.className = 'd-flex justify-content-between align-items-center mb-2 px-1';
-
-    const titleSpan = document.createElement('span');
-    titleSpan.className = 'fw-bold small text-light';
-    titleSpan.textContent = section.title;
-
-    const badgeSpan = document.createElement('span');
-    badgeSpan.className = 'badge bg-secondary text-light small';
-    badgeSpan.textContent = section.badge;
-
-    rowHeader.appendChild(titleSpan);
-    rowHeader.appendChild(badgeSpan);
-    rowBox.appendChild(rowHeader);
-
-    const buttonsContainer = document.createElement('div');
-    buttonsContainer.className = 'd-flex flex-wrap gap-2';
+  $.each(zoneSections, function (idx, section) {
+    const $rowBox = $('<div class="p-2 bg-dark rounded border border-secondary station-zone-box"></div>');
+    const $rowHeader = $(`
+      <div class="d-flex justify-content-between align-items-center mb-2 px-1">
+        <span class="fw-bold small text-light">${section.title}</span>
+        <span class="badge bg-secondary text-light small">${section.badge}</span>
+      </div>
+    `);
+    const $buttonsContainer = $('<div class="d-flex flex-wrap gap-2"></div>');
 
     const zoneStations = CLUB_STATIONS.filter(s => s.zone === section.zoneKey);
-    zoneStations.forEach(station => {
-      const seatBtn = document.createElement('button');
-      seatBtn.type = 'button';
-      seatBtn.className = 'btn btn-sm btn-outline-info text-center';
-      seatBtn.style.minWidth = '54px';
-      seatBtn.dataset.seatId = station.id;
-      seatBtn.dataset.zone = station.zone;
-      seatBtn.title = `${station.name} (${station.specs})`;
-      seatBtn.textContent = station.id;
 
-      if (station.status === 'occupied') {
-        seatBtn.className = 'btn btn-sm btn-outline-secondary text-muted';
-        seatBtn.disabled = true;
-        seatBtn.title = `${station.name} - Occupied by active session`;
+    $.each(zoneStations, function (sIdx, station) {
+      const isOccupied = station.status === 'occupied';
+
+      // Build button with jQuery attributes and data attributes
+      const $seatBtn = $('<button type="button" class="btn btn-sm text-center station-btn"></button>')
+        .css('min-width', '54px')
+        .attr('data-seat-id', station.id)
+        .attr('data-zone', station.zone)
+        .text(station.id);
+
+      if (isOccupied) {
+        $seatBtn.addClass('btn-outline-secondary text-muted occupied')
+          .prop('disabled', true)
+          .attr('title', `${station.name} - Occupied by active session`);
       } else {
-        seatBtn.addEventListener('click', () => {
-          // Max 5 seats
-          if (selectedSeats.has(station.id)) {
-            selectedSeats.delete(station.id);
-            seatBtn.className = 'btn btn-sm btn-outline-info';
-          } else {
-            if (selectedSeats.size >= 5) {
-              if (typeof displayGlobalToast === 'function') {
-                displayGlobalToast('Seat Limit', 'You can select up to 5 gaming stations per reservation.', 'warning');
-              }
-              return;
-            }
-            selectedSeats.add(station.id);
-            seatBtn.className = 'btn btn-sm btn-info text-dark fw-bold selected';
-
-            // Auto-select corresponding zone radio
-            if (station.zone === 'standard' && zoneStandardRadio) zoneStandardRadio.checked = true;
-            if (station.zone === 'vip1' && zoneVipRadio) zoneVipRadio.checked = true;
-            if (station.zone === 'vip2' && zoneBootcampRadio) zoneBootcampRadio.checked = true;
-          }
-
-          // Sync party size
-          if (partySizeInput) {
-            partySizeInput.value = selectedSeats.size > 0 ? selectedSeats.size : 1;
-          }
-
-          updateChips();
-          refreshTotalDisplay();
-        });
+        $seatBtn.addClass('btn-outline-info')
+          .attr('title', `${station.name} (${station.specs})`);
       }
 
-      buttonsContainer.appendChild(seatBtn);
+      $buttonsContainer.append($seatBtn);
     });
 
-    rowBox.appendChild(buttonsContainer);
-    gridWrapper.appendChild(rowBox);
+    $rowBox.append($rowHeader, $buttonsContainer);
+    $gridWrapper.append($rowBox);
   });
 
-  seatingCard.appendChild(gridWrapper);
+  // Inject seating map into the DOM right after the form legend
+  const $legendEl = $bookingForm.find('legend:first');
+  if ($legendEl.length) {
+    $legendEl.after($seatingCard);
+  } else {
+    $bookingForm.prepend($seatingCard);
+  }
 
-  // Selected stations chips row
-  const chipsRow = document.createElement('div');
-  chipsRow.className = 'mt-3 pt-2 border-top border-secondary small text-light d-flex flex-wrap align-items-center gap-2';
-  chipsRow.id = 'selected-chips-row';
-
-  const chipsLabel = document.createElement('span');
-  chipsLabel.className = 'text-muted';
-  chipsLabel.textContent = 'Selected Stations:';
-  chipsRow.appendChild(chipsLabel);
-
-  const chipsContainer = document.createElement('span');
-  chipsContainer.id = 'seats-chips-display';
-  chipsContainer.className = 'text-info';
-  chipsContainer.textContent = 'None (click available stations above)';
-  chipsRow.appendChild(chipsContainer);
-
-  seatingCard.appendChild(chipsRow);
-
+  // Update selected stations chip display
+  const $chipsDisplay = $('#seats-chips-display');
   function updateChips() {
     if (selectedSeats.size === 0) {
-      chipsContainer.textContent = 'None (click available stations above)';
+      $chipsDisplay.text('None (click available stations above)');
     } else {
-      chipsContainer.textContent = Array.from(selectedSeats).join(', ');
+      $chipsDisplay.text(Array.from(selectedSeats).join(', '));
     }
   }
 
-  // Insert seating map dynamically right after the form fieldset legend
-  const legendEl = bookingForm.querySelector('legend');
-  if (legendEl && legendEl.nextSibling) {
-    legendEl.parentNode.insertBefore(seatingCard, legendEl.nextSibling);
-  } else {
-    bookingForm.insertBefore(seatingCard, bookingForm.firstChild);
-  }
 
-  // Listeners for radio buttons, package select, and party size
-  [zoneStandardRadio, zoneVipRadio, zoneBootcampRadio].forEach(radio => {
-    if (radio) radio.addEventListener('change', refreshTotalDisplay);
-  });
-  if (timeSlotSelect) timeSlotSelect.addEventListener('change', refreshTotalDisplay);
-  if (partySizeInput) partySizeInput.addEventListener('input', refreshTotalDisplay);
-
-  // 5. COMPREHENSIVE FORM VALIDATION FLOW
-  bookingForm.noValidate = true;
-
-  bookingForm.addEventListener('submit', (event) => {
+  /**
+   * ==============================================================================
+   * DELEGATED EVENT HANDLER DEMONSTRATION
+   * Pattern: $("#dynamic-seating-container").on("click", ".station-btn:not(.occupied)", handler)
+   *
+   * Why binding directly to .station-btn would NOT work:
+   * The station buttons are dynamically generated at runtime from the CLUB_STATIONS array
+   * and appended to the seating container. If we attached a direct listener like
+   * $('.station-btn').on('click', ...), jQuery would bind handlers only to elements
+   * existing in the DOM at the exact moment of execution.
+   * By delegating the event to #dynamic-seating-container (the persistent ancestor),
+   * DOM event bubbling allows the container to catch clicks from newly added buttons,
+   * match them against the selector '.station-btn:not(.occupied)', and run the handler.
+   * ==============================================================================
+   */
+  $seatingCard.on('click', '.station-btn:not(.occupied)', function (event) {
     event.preventDefault();
 
-    // Clear previous feedback
-    if (errorAlert) {
-      errorAlert.classList.add('d-none');
-      errorAlert.innerHTML = '';
-    }
-    if (confirmationAlert) {
-      confirmationAlert.classList.add('d-none');
-      confirmationAlert.innerHTML = '';
-    }
+    // Use of $(this) inside handler
+    const $btn = $(this);
+    const seatId = $btn.attr('data-seat-id');
+    const stationZone = $btn.attr('data-zone');
 
-    const errors = [];
-    let firstInvalidField = null;
+    // Traversal demonstration: reaching closest parent card and finding specs
+    const $zoneBox = $btn.closest('.station-zone-box');
+    const zoneTitle = $zoneBox.find('.fw-bold').text();
 
-    // Field 1: Gamer Tag / Client Name (trimmed text, min 2 chars)
-    const cleanName = clientNameInput ? clientNameInput.value.trim() : '';
-    if (!cleanName || cleanName.length < 2) {
-      errors.push('Please enter your Gamer Tag or Full Name (at least 2 characters).');
-      if (clientNameInput) {
-        clientNameInput.classList.add('is-invalid');
-        if (!firstInvalidField) firstInvalidField = clientNameInput;
+    if (selectedSeats.has(seatId)) {
+      selectedSeats.delete(seatId);
+      $btn.removeClass('btn-info text-dark fw-bold selected')
+        .addClass('btn-outline-info');
+    } else {
+      if (selectedSeats.size >= 5) {
+        if (typeof displayGlobalToast === 'function') {
+          displayGlobalToast('Seat Limit Reached', 'You can select up to 5 gaming stations per reservation voucher.', 'warning');
+        }
+        return;
       }
-    } else if (clientNameInput) {
-      clientNameInput.classList.remove('is-invalid');
+      selectedSeats.add(seatId);
+      $btn.removeClass('btn-outline-info')
+        .addClass('btn-info text-dark fw-bold selected');
+
+      // Auto-synchronize the corresponding zone radio button using .prop('checked', true)
+      if (stationZone === 'standard') $('#zone-standard').prop('checked', true);
+      if (stationZone === 'vip1') $('#zone-vip').prop('checked', true);
+      if (stationZone === 'vip2') $('#zone-bootcamp').prop('checked', true);
     }
 
-    // Field 2: Phone number (+7 format validation)
-    const cleanPhone = clientPhoneInput ? clientPhoneInput.value.trim() : '';
-    const phoneRegex = /^\+?[0-9\s\-()]{10,18}$/;
-    if (!cleanPhone || !phoneRegex.test(cleanPhone)) {
-      errors.push('Please provide a valid contact telephone number (e.g. +7 706 605 5465).');
-      if (clientPhoneInput) {
-        clientPhoneInput.classList.add('is-invalid');
-        if (!firstInvalidField) firstInvalidField = clientPhoneInput;
+    // Sync party size input
+    if ($partySizeInput.length) {
+      $partySizeInput.val(selectedSeats.size > 0 ? selectedSeats.size : 1);
+    }
+
+    updateChips();
+    refreshTotalDisplay();
+  });
+
+  // Event Type 4: 'mouseenter' event on station buttons for live hardware preview
+  $seatingCard.on('mouseenter', '.station-btn', function () {
+    const previewText = $(this).attr('title') || 'Gaming Station';
+    $('#station-hover-preview').text(`● ${previewText}`);
+  });
+
+  $seatingCard.on('mouseleave', '.station-btn', function () {
+    $('#station-hover-preview').text('Hover over any station for hardware specs');
+  });
+
+  // Listeners for radio buttons, package select, and party size
+  // Demonstrates: 'change' and 'input' event types with .on()
+  $('input[name="zone_tier"]').on('change', refreshTotalDisplay);
+  $timeSlotSelect.on('change', refreshTotalDisplay);
+  $partySizeInput.on('input', refreshTotalDisplay);
+
+
+  /**
+   * ==============================================================================
+   * REWRITTEN FEATURE 3: MAIN FORM VALIDATION (JQUERY REWRITE)
+   * Comparison with plain-JavaScript version in old-js-version.js:
+   * Plain JS lines replaced:
+   *   - addEventListener('submit', ...) -> .on('submit', ...)
+   *   - document.getElementById, element.classList.add('is-invalid') -> $('.form-control').addClass('is-invalid error')
+   *   - Manual aggregated <ul> creation in one alert -> field-level error messages injected directly next to each input
+   *   - element.value.trim() -> $.trim($field.val()) / $field.val().trim()
+   *   - element.checked -> $checkbox.prop('checked')
+   *   - confirmationAlert.classList.remove('d-none') -> $confirmationAlert.removeClass('d-none hidden').hide().fadeIn(400)
+   * Assessment: The jQuery version provides a vastly superior user experience by placing real-time inline errors
+   * next to each field, clearing errors instantly upon correction via event delegation (.on('input change')),
+   * and smoothly animating the voucher feedback, while taking fewer lines of cleaner, chainable code.
+   *
+   * WHY A BROWSER CHECK NEVER REPLACES A SERVER CHECK:
+   * Client-side validation runs in the user's browser, which is an untrusted environment.
+   * Any visitor can trivially bypass client-side checks by disabling JavaScript in settings,
+   * modifying HTML attributes (e.g. removing 'required') using browser DevTools, or sending
+   * direct HTTP requests using command-line tools like curl or Postman.
+   * Therefore, client-side validation is strictly for user experience (instant feedback).
+   * Server-side validation is mandatory and irreplaceable because only the server can guarantee
+   * data integrity, prevent malicious payloads (SQL Injection, Cross-Site Scripting), and verify
+   * business rules securely on trusted infrastructure.
+   *
+   * DIFFERENCE BETWEEN .text() AND .html():
+   * .text() sets or gets the text content of selected elements, automatically encoding special
+   * HTML characters (e.g. '<' becomes '&lt;'). It is safe against XSS vulnerabilities.
+   * .html() parses the string as HTML markup and injects DOM nodes. It is used when styled
+   * elements (like <strong> tags, icons, badges) need to be rendered.
+   *
+   * DIFFERENCE BETWEEN .attr() AND .prop() ON A CHECKBOX:
+   * .attr('checked') inspects the initial HTML attribute defined in the markup (the default state).
+   * .prop('checked') inspects the live, current boolean property of the DOM object (true if checked, false if not).
+   * For user interactions on checkboxes, .prop('checked') must always be used.
+   * ==============================================================================
+   */
+
+  // Keep browser required attributes in HTML as first line of defence,
+  // but suppress browser default bubbles so our jQuery inline errors take precedence
+  $bookingForm.attr('novalidate', 'novalidate');
+
+  /**
+   * Helper: Display inline error message next to an invalid field
+   * Traverses to parent container and injects or reveals .field-error-feedback
+   * @param {jQuery} $field - Target input element
+   * @param {string} message - Error description
+   */
+  function markFieldError($field, message) {
+    // Add error classes from existing stylesheets (.is-invalid from Bootstrap, .error from base.css)
+    $field.addClass('is-invalid error').removeClass('is-valid success');
+
+    let $feedback = $field.siblings('.field-error-feedback');
+    if ($feedback.length === 0) {
+      $feedback = $('<div class="field-error-feedback invalid-feedback text-danger small mt-1 d-block"></div>');
+      $field.after($feedback);
+    }
+    // Safe text injection via .text()
+    $feedback.text(message).show();
+  }
+
+  /**
+   * Helper: Clear inline error and mark field valid
+   * @param {jQuery} $field - Target input element
+   */
+  function markFieldSuccess($field) {
+    $field.removeClass('is-invalid error').addClass('is-valid success');
+    $field.siblings('.field-error-feedback').text('').hide();
+  }
+
+  /**
+   * Validate a single form field and update its inline state
+   * @param {jQuery} $field
+   * @returns {boolean} True if valid
+   */
+  function validateSingleField($field) {
+    const id = $field.attr('id');
+
+    if (id === 'client-name') {
+      const val = $.trim($field.val());
+      if (!val || val.length < 2) {
+        markFieldError($field, 'Please enter your Gamer Tag or Full Name (at least 2 characters).');
+        return false;
       }
-    } else if (clientPhoneInput) {
-      clientPhoneInput.classList.remove('is-invalid');
+      markFieldSuccess($field);
+      return true;
     }
 
-    // Field 3: Email address
-    const cleanEmail = clientEmailInput ? clientEmailInput.value.trim() : '';
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!cleanEmail || !emailRegex.test(cleanEmail)) {
-      errors.push('Please enter a valid email address (e.g. gamer@example.kz).');
-      if (clientEmailInput) {
-        clientEmailInput.classList.add('is-invalid');
-        if (!firstInvalidField) firstInvalidField = clientEmailInput;
+    if (id === 'client-phone') {
+      const val = $.trim($field.val());
+      const phoneRegex = /^\+?[0-9\s\-()]{10,18}$/;
+      if (!val || !phoneRegex.test(val)) {
+        markFieldError($field, 'Please provide a valid contact telephone number (e.g. +7 706 605 5465).');
+        return false;
       }
-    } else if (clientEmailInput) {
-      clientEmailInput.classList.remove('is-invalid');
+      markFieldSuccess($field);
+      return true;
     }
 
-    // Field 4: Booking Date (no past dates!)
-    const dateVal = bookingDateInput ? bookingDateInput.value : '';
-    const todayStr = new Date().toISOString().split('T')[0];
-    if (!dateVal || dateVal < todayStr) {
-      errors.push('Reservation date cannot be in the past.');
-      if (bookingDateInput) {
-        bookingDateInput.classList.add('is-invalid');
-        if (!firstInvalidField) firstInvalidField = bookingDateInput;
+    if (id === 'client-email') {
+      const val = $.trim($field.val());
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!val || !emailRegex.test(val)) {
+        markFieldError($field, 'Please enter a valid email address (e.g. gamer@example.kz).');
+        return false;
       }
-    } else if (bookingDateInput) {
-      bookingDateInput.classList.remove('is-invalid');
+      markFieldSuccess($field);
+      return true;
     }
 
-    // Field 5: Arrival Time
-    const timeVal = bookingTimeInput ? bookingTimeInput.value : '';
-    if (!timeVal) {
-      errors.push('Please select your expected arrival time.');
-      if (bookingTimeInput) {
-        bookingTimeInput.classList.add('is-invalid');
-        if (!firstInvalidField) firstInvalidField = bookingTimeInput;
+    if (id === 'booking-date') {
+      const val = $field.val();
+      if (!val || val < todayStr) {
+        markFieldError($field, 'Reservation date cannot be in the past.');
+        return false;
       }
-    } else if (bookingTimeInput) {
-      bookingTimeInput.classList.remove('is-invalid');
+      markFieldSuccess($field);
+      return true;
     }
 
-    // Field 6: House Rules Agreement Checkbox
-    if (policyAgreeCheckbox && !policyAgreeCheckbox.checked) {
-      errors.push('You must acknowledge the club reservation terms and 15-minute station hold policy.');
-      policyAgreeCheckbox.classList.add('is-invalid');
-      if (!firstInvalidField) firstInvalidField = policyAgreeCheckbox;
-    } else if (policyAgreeCheckbox) {
-      policyAgreeCheckbox.classList.remove('is-invalid');
-    }
-
-    // Output errors if any
-    if (errors.length > 0) {
-      if (errorAlert) {
-        const errorList = document.createElement('ul');
-        errorList.className = 'mb-0 ps-3';
-        errors.forEach(err => {
-          const li = document.createElement('li');
-          li.textContent = err;
-          errorList.appendChild(li);
-        });
-        errorAlert.appendChild(errorList);
-        errorAlert.classList.remove('d-none');
+    if (id === 'booking-time') {
+      const val = $field.val();
+      if (!val) {
+        markFieldError($field, 'Please select your expected arrival time.');
+        return false;
       }
-      if (firstInvalidField) {
-        firstInvalidField.focus();
+      markFieldSuccess($field);
+      return true;
+    }
+
+    if (id === 'policy-agree') {
+      // Check current boolean property with .prop('checked')
+      const isChecked = $field.prop('checked');
+      if (!isChecked) {
+        markFieldError($field, 'You must acknowledge the club conduct and 15-minute station hold policy.');
+        return false;
+      }
+      markFieldSuccess($field);
+      return true;
+    }
+
+    return true;
+  }
+
+  // Clear errors as soon as the visitor fixes the field using jQuery .on('input change')
+  $bookingForm.on('input change', 'input, select, textarea', function () {
+    const $field = $(this);
+    if ($field.hasClass('is-invalid') || $field.hasClass('error')) {
+      validateSingleField($field);
+    }
+  });
+
+
+  // Main Form Submission Handler
+  $bookingForm.on('submit', function (event) {
+    /**
+     * Explanation of event.preventDefault():
+     * Without event.preventDefault(), the browser performs standard form submission,
+     * sending an HTTP request and reloading the page. This would immediately wipe out
+     * all selected stations, clear input values, and destroy our inline validation messages.
+     */
+    event.preventDefault();
+
+    // Hide any previous top-level alerts
+    $errorAlert.slideUp(200);
+    $confirmationAlert.addClass('d-none');
+
+    // Validate all individual fields
+    const fieldsToValidate = [
+      $clientNameInput,
+      $clientPhoneInput,
+      $clientEmailInput,
+      $bookingDateInput,
+      $bookingTimeInput,
+      $policyAgreeCheckbox
+    ];
+
+    let isFormValid = true;
+    let $firstInvalid = null;
+
+    $.each(fieldsToValidate, function (i, $f) {
+      if ($f.length && !validateSingleField($f)) {
+        isFormValid = false;
+        if (!$firstInvalid) {
+          $firstInvalid = $f;
+        }
+      }
+    });
+
+    if (!isFormValid) {
+      // Focus the first invalid field for accessibility
+      if ($firstInvalid) {
+        $firstInvalid.focus();
       }
       return;
     }
 
-    // Success State & Voucher Summary
+    // Success State: Generate Voucher Summary Details
     const zone = getSelectedZone();
-    const pkg = timeSlotSelect ? timeSlotSelect.value : 'hourly';
+    const pkg = $timeSlotSelect.val() || 'hourly';
     const seatList = selectedSeats.size > 0 ? Array.from(selectedSeats).join(', ') : 'Station Auto-Assigned';
     const totalCost = calculateBookingPrice(zone, pkg, selectedSeats.size > 0 ? selectedSeats.size : 1);
     const voucherRef = generateVoucherCode();
+    const cleanName = $.trim($clientNameInput.val());
+    const dateVal = $bookingDateInput.val();
+    const timeVal = $bookingTimeInput.val();
+    const formattedTotal = typeof formatKZT === 'function' ? formatKZT(totalCost) : `${totalCost} ₸`;
 
-    if (confirmationAlert) {
-      confirmationAlert.className = 'alert alert-success mt-4';
-      confirmationAlert.innerHTML = `
-        <h4 class="alert-heading h5 fw-bold">Reservation Voucher Confirmed!</h4>
-        <p class="mb-1">Guest <strong>${cleanName}</strong>, your station(s) [<strong>${seatList}</strong>] at <strong>QazaqPeek Astana (Kenesary 69)</strong> are held for 15 minutes past arrival.</p>
-        <hr class="border-secondary">
-        <div class="d-flex flex-wrap justify-content-between small">
-          <span>Voucher Code: <strong id="booking-reference-code">${voucherRef}</strong></span>
-          <span>Date &amp; Time: <strong id="booking-confirmed-time">${dateVal} at ${timeVal}</strong></span>
-          <span>Estimated Total: <strong>${typeof formatKZT === 'function' ? formatKZT(totalCost) : totalCost + ' ₸'}</strong></span>
-          <span>Hold Period: <strong>15 Mins Past Arrival</strong></span>
-        </div>
-        <p class="small text-muted mt-2 mb-0">
-          * Demonstration Confirmation: No payment was charged and no server record was saved. Settle upon check-in via Kaspi QR or Cash.
-        </p>
-      `;
-      confirmationAlert.classList.remove('d-none');
-      confirmationAlert.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
+    const voucherHtml = `
+      <h4 class="alert-heading h5 fw-bold">Reservation Voucher Confirmed!</h4>
+      <p class="mb-1">Guest <strong>${cleanName}</strong>, your station(s) [<strong>${seatList}</strong>] at <strong>QazaqPeek Astana (Kenesary 69)</strong> are held for 15 minutes past arrival.</p>
+      <hr class="border-secondary">
+      <div class="d-flex flex-wrap justify-content-between small">
+        <span>Voucher Code: <strong id="booking-reference-code">${voucherRef}</strong></span>
+        <span>Date &amp; Time: <strong id="booking-confirmed-time">${dateVal} at ${timeVal}</strong></span>
+        <span>Estimated Total: <strong>${formattedTotal}</strong></span>
+        <span>Hold Period: <strong>15 Mins Past Arrival</strong></span>
+      </div>
+      <p class="small text-muted mt-2 mb-0">
+        * Demonstration Confirmation: No payment was charged and no server record was saved. Settle upon check-in via Kaspi QR or Cash.
+      </p>
+    `;
 
-    // Reset station selections
+    /**
+     * METHOD CHAIN DEMONSTRATION (Chain of 4 links):
+     * Link 1: $confirmationAlert.removeClass('d-none hidden') -> removes hiding CSS classes
+     * Link 2: .hide() -> sets inline display:none instantly without transition
+     * Link 3: .html(voucherHtml) -> injects rich HTML markup containing voucher details
+     * Link 4: .fadeIn(400, callback) -> smoothly animates opacity from 0 to 1 over 400ms and executes callback
+     */
+    $confirmationAlert.removeClass('d-none hidden')
+      .hide()
+      .html(voucherHtml)
+      .fadeIn(400, function () {
+        // Smooth scroll to the voucher container
+        $('html, body').animate({
+          scrollTop: $confirmationAlert.offset().top - 80
+        }, 300);
+      });
+
+    // Reset station selections and classes
     selectedSeats.clear();
-    document.querySelectorAll('.btn-info.selected').forEach(btn => {
-      btn.className = 'btn btn-sm btn-outline-info';
-    });
+    $seatingCard.find('.station-btn.selected')
+      .removeClass('btn-info text-dark fw-bold selected')
+      .addClass('btn-outline-info');
     updateChips();
+
+    // Reset form fields
+    $bookingForm[0].reset();
+    $bookingForm.find('.is-valid, .success').removeClass('is-valid success');
+    $bookingForm.find('.field-error-feedback').text('').hide();
+
+    // Set today date back after reset
+    $bookingDateInput.val(todayStr);
+    refreshTotalDisplay();
+
+    if (typeof displayGlobalToast === 'function') {
+      displayGlobalToast(
+        'Voucher Generated',
+        `Reservation voucher ${voucherRef} confirmed for ${cleanName}!`,
+        'success'
+      );
+    }
   });
 
   // Handle Form Reset
-  bookingForm.addEventListener('reset', () => {
+  $bookingForm.on('reset', function () {
     selectedSeats.clear();
-    document.querySelectorAll('.btn-info.selected').forEach(btn => {
-      btn.className = 'btn btn-sm btn-outline-info';
-    });
+    $seatingCard.find('.station-btn.selected')
+      .removeClass('btn-info text-dark fw-bold selected')
+      .addClass('btn-outline-info');
     updateChips();
-    if (errorAlert) errorAlert.classList.add('d-none');
-    if (confirmationAlert) confirmationAlert.classList.add('d-none');
+    $bookingForm.find('.is-invalid, .is-valid, .error, .success').removeClass('is-invalid is-valid error success');
+    $bookingForm.find('.field-error-feedback').text('').hide();
+    $errorAlert.slideUp(200);
+    $confirmationAlert.addClass('d-none');
     setTimeout(refreshTotalDisplay, 10);
   });
 
