@@ -237,3 +237,161 @@ In strict accordance with the Assignment 4–5 specification, HTML and CSS marku
 ### Milestone Stages & Git Tags
 * **Assignment 4 (`tag: assignment-4`):** Variables (`const`/`let`), operators, `Math.random()`, conditions, logical operators, arrays ($\ge 6$ objects with $\ge 4$ properties), loops/traversals, and $\ge 4$ reusable functions with parameters and return values.
 * **Assignment 5 (`tag: assignment-5`):** DOM creation/removal, attributes/classes, events (`submit`, `click`, `input`/`change`), and complete 4-field form validation flows with field-level errors and demonstration summaries.
+
+
+---
+
+## 11. Assignment 4: jQuery Architecture & Defense Preparation Guide
+
+### 11.1 Connecting jQuery
+* **jQuery CDN:** Minified version 3.7.1 is linked from the official CDN (`https://code.jquery.com/jquery-3.7.1.min.js`) in all 7 HTML pages immediately preceding custom application scripts.
+* **Execution Guard:** All jQuery code is enclosed within `$(function () { ... })`, jQuery's modern shorthand for `$(document).ready()`.
+* **Why `$(function () { ... })` is needed:** It ensures the browser has fully parsed the HTML Document Object Model (DOM) tree into memory before querying elements or attaching listeners. This prevents `null` / `undefined` reference exceptions without needing to wait for heavy external resources (such as high-res images or fonts) to complete downloading.
+* **Separation of Concerns:** Zero inline JavaScript, zero `onclick` attributes in the markup, and all code is maintained in separate `.js` modules.
+
+---
+
+### 11.2 The Three Rewritten Features (Side-by-Side Comparison)
+The original vanilla JavaScript implementations are preserved verbatim in [`old-js-version.js`](file:///Users/adiletainadinov/.gemini/antigravity/scratch/web-assignment1/old-js-version.js) (unlinked to any page) for direct defense comparison.
+
+| Feature | Plain JavaScript (in `old-js-version.js`) | jQuery 3.7.1 (in `home.js` / `booking.js`) | Comparison & Assessment |
+| :--- | :--- | :--- | :--- |
+| **1. Show-and-Hide of a Block** | `submitFormCard.classList.contains('d-none')`<br>`submitFormCard.classList.remove('d-none')`<br>`submitFormCard.classList.add('d-none')`<br>`addReviewToggleBtn.textContent = ...`<br>`addReviewToggleBtn.addEventListener('click', ...)` | `$('#new-review-card').slideToggle(300, function() {`<br>&nbsp;&nbsp;`const isVisible = $(this).is(':visible');`<br>&nbsp;&nbsp;`$btn.text(isVisible ? '✕ Close Form' : '+ Write a Review');`<br>`});` | **Substantially shorter and clearer.** Replaces manual boolean toggling and abrupt CSS display switches with an animated sliding transition, duration, and completion callback. |
+| **2. Dynamic List / Cards Built in Code** | `document.createElement('div')`<br>`card.className = ...`<br>`card.dataset.category = ...`<br>`card.appendChild(...)`<br>`container.innerHTML = ''`<br>`reviews.forEach(...)` | `$.each(reviews, function(i, review) {`<br>&nbsp;&nbsp;`const $card = $('<div class="..."></div>');`<br>&nbsp;&nbsp;`$card.attr('data-category', review.category);`<br>&nbsp;&nbsp;`$container.append($card);`<br>`});` | **Substantially shorter and much cleaner.** Eliminates ~35 lines of repetitive DOM object instantiation by using concise jQuery HTML string builders and `.append()`. |
+| **3. Main Form Validation** | `bookingForm.addEventListener('submit', ...)`<br>`input.value.trim()`<br>`regex.test(...)`<br>`input.classList.add('is-invalid')`<br>Manual aggregated `<ul>` in one top-level alert box | `$('#booking-form').on('submit', ...)`<br>`$.trim($field.val())`<br>`regex.test(...)`<br>`$field.addClass('is-invalid error')`<br>Inline field-level error messages directly adjacent to each field, cleared on `.on('input change')` | **Vastly superior UX and cleaner architecture.** Field-level errors appear immediately under the invalid input, clear automatically as the user types, and animate the voucher confirmation via `.fadeIn(400)`. |
+
+---
+
+### 11.3 Selectors, Traversal & Method Chaining
+
+#### Selectors Used Across the Project
+* **By ID:** `$('#booking-form')`, `$('#reviews-search-input')`, `$('#client-name')`, `$('#reviews-section')`
+* **By Class:** `$('.station-btn')`, `$('.review-filter-btn')`, `$('.navbar-nav .nav-link')`, `$('.station-zone-box')`
+* **By Element:** `$('form')`, `$('button')`, `$('input')`, `$('textarea')`, `$('legend:first')`
+* **By Attribute:** `$('input[name="zone_tier"]')`, `$('input[type="email"]')`, `$('button[data-category="all"]')`
+* **Filter Selectors:**
+  * `:checked`: `$('input[name="zone_tier"]:checked')` (retrieves active radio button selection)
+  * `:not()`: `$('.station-btn:not(.occupied)')` (targets only clickable, non-occupied PC rigs)
+  * `:first`: `$reviewsRow.find('.review-item-col:first')` (highlights the top review in results)
+  * `:visible`: `$('#new-review-card').is(':visible')` (checks visibility state in callbacks)
+
+#### Traversal Methods
+* `.find()`: `$btn.find('.vote-count')`, `$card.find('.review-author-name')` (searches descendants)
+* `.closest()`: `$btn.closest('.card')`, `$btn.closest('.station-zone-box')` (travels up ancestors to find container)
+* `.parent()`: `$toastCard.parent().length` (checks immediate parent container)
+* `.siblings()`: `$(this).siblings('.review-filter-btn')`, `$field.siblings('.field-error-feedback')` (accesses neighboring elements)
+* `.each()`: `$.each(categories, ...)` and `$navLinks.each(...)` (iterates over collections)
+* `$(this)`: Employed inside filter click handlers, station seat clicks, scroll listeners, input validation, and effect callbacks.
+
+#### Method Chaining Demonstrations
+* **Chain 1 (`js/home.js` — Filter Buttons):**
+  ```javascript
+  $(this).addClass('btn-info text-dark fw-bold active')
+         .removeClass('btn-outline-secondary')
+         .siblings('.review-filter-btn')
+         .removeClass('btn-info text-dark fw-bold active')
+         .addClass('btn-outline-secondary');
+  ```
+  * *Link 1:* `.addClass(...)` — applies the active esports accent style to the clicked button.
+  * *Link 2:* `.removeClass(...)` — removes the inactive outline class from the clicked button.
+  * *Link 3:* `.siblings(...)` — traverses the DOM to select all sibling filter buttons in the same container.
+  * *Link 4:* `.removeClass(...).addClass(...)` — resets all sibling buttons back to inactive outline styling.
+
+* **Chain 2 (`js/booking.js` — Voucher Reveal):**
+  ```javascript
+  $confirmationAlert.removeClass('d-none hidden')
+                    .hide()
+                    .html(voucherHtml)
+                    .fadeIn(400, function () { ... });
+  ```
+  * *Link 1:* `.removeClass('d-none hidden')` — clears Bootstrap and custom CSS hiding rules.
+  * *Link 2:* `.hide()` — sets inline `display: none` instantly without animation.
+  * *Link 3:* `.html(voucherHtml)` — injects the rich voucher markup into the container.
+  * *Link 4:* `.fadeIn(400, cb)` — smoothly animates opacity from 0 to 1 over 400ms and executes smooth-scroll callback.
+
+---
+
+### 11.4 Modifying the DOM: Methods & Differences
+
+#### 1. Difference between `.text()` and `.html()`
+* **`.text()`:** Retrieves or sets the text content of elements. Automatically HTML-encodes special characters (`<`, `>`, `&`), rendering them safely without interpreting them as HTML tags. **Use Case:** Preventing Cross-Site Scripting (XSS) when rendering user-submitted names, review comments, and price numbers.
+* **`.html()`:** Retrieves or injects HTML markup. The browser parses the string and constructs new DOM nodes. **Use Case:** Rendering rich voucher structures containing `<strong>`, `<hr>`, and `<span>` elements.
+
+#### 2. Difference between `.attr()` and `.prop()` on a Checkbox
+* **`.attr('checked')`:** Reads or modifies the initial HTML attribute string in the markup (`<input checked>`). It reflects the default value defined in HTML, not user changes.
+* **`.prop('checked')`:** Reads or modifies the live boolean property (`true` or `false`) on the underlying DOM element object. It reflects the user's active interaction in real time. For form validation and conditional logic, `.prop('checked')` must always be used.
+
+#### 3. Appearance Changes via Existing Classes
+* Handled exclusively via `.addClass()`, `.removeClass()`, and `.toggleClass()` utilizing pre-existing CSS rules:
+  * `.hidden` / `.is-hidden` (`display: none !important;`)
+  * `.active` / `.is-active` (`color: var(--qp-accent); border-color: var(--qp-accent);`)
+  * `.selected` / `.is-selected` (`background-color: rgba(56, 189, 248, 0.15);`)
+  * `.error` / `.is-error` / `.is-invalid` (red border & feedback)
+  * `.success` / `.is-success` / `.is-valid` (green border & feedback)
+
+---
+
+### 11.5 Events & Delegation
+
+#### Event Types Handled via `.on()`
+1. `'click'`: Filter buttons, station seat selection, review upvoting, write review toggle, cancel buttons, back-to-top button.
+2. `'submit'`: Main booking reservation form, review submission form, footer newsletter form.
+3. `'input'`: Search keyword filtering, review textarea character counter, party size sync, real-time error clearance.
+4. `'change'`: Tariff zone radio buttons, duration package select, date/time pickers.
+5. `'mouseenter'` / `'mouseleave'`: Station seating hover specs preview tooltip.
+6. `'scroll'`: Window scroll tracking for floating back-to-top button.
+
+#### Delegated Event Handling Architecture
+* **Implementation:**
+  * `$('#reviews-section .row.g-4').on('click', '.review-helpful-btn', handler);`
+  * `$('#dynamic-seating-container').on('click', '.station-btn:not(.occupied)', handler);`
+* **Why direct binding (`$('.station-btn').on(...)`) does not work for dynamic items:**
+  Direct binding evaluates the selector expression once at the exact instant the script executes, attaching listeners exclusively to matching nodes currently present in the DOM. Any elements created dynamically in code at runtime (e.g., station seat buttons rendered from `CLUB_STATIONS` or review cards from `REVIEWS_DATA`) did not exist when direct binding occurred and would have zero listeners.
+  Delegated handling binds the listener to a permanent ancestor already present in the HTML. Due to native DOM event bubbling, user clicks on dynamic children bubble up the DOM tree to the ancestor. jQuery inspects `event.target`, matches it against the delegated selector (`.station-btn`), and executes the handler.
+
+#### Why `event.preventDefault()` is Essential
+* By default, submitting an HTML form sends an HTTP GET/POST request and causes the browser to reload the page or navigate away.
+* Calling `event.preventDefault()` suppresses this native reload, allowing client-side JavaScript to validate form inputs, calculate totals, update state, and render confirmation vouchers on-screen without losing form data or resetting the application state.
+
+---
+
+### 11.6 Effects with Purpose, Duration & Callbacks
+* **`.slideToggle(300, callback)`:** Toggles the review submission form card when clicking "+ Write a Review". Shifts button text to "✕ Close Form" and sets focus on completion.
+* **`.slideUp(300, callback)`:** Collapses the review form on "Cancel" or clears validation error alerts.
+* **`.fadeIn(400, callback)`:** Smoothly reveals the booking confirmation voucher card, triggering a callback that smooth-scrolls the visitor directly to their voucher code.
+* **`.fadeOut(250, callback)`:** Smoothly hides toast notifications and back-to-top buttons, removing dismissed elements from the DOM in the callback.
+* **`.animate({ scrollTop: 0 }, 400)`:** Provides smooth hardware-accelerated scrolling when clicking the back-to-top button.
+
+---
+
+### 11.7 Form Validation in jQuery
+* **Target Form:** `#booking-form` on [`booking.html`](file:///Users/adiletainadinov/.gemini/antigravity/scratch/web-assignment1/booking.html).
+* **Field-Level Inline Validation:** Each invalid field receives `.addClass('is-invalid error')` and displays a dedicated error message directly below the field using `.after()` or `.siblings()` (no single global error summary).
+* **Live Error Clearing:** Bound to `.on('input change')`, clearing the error class and hiding the message immediately as soon as the user corrects their input.
+* **Checks Enforced:**
+  1. Gamer Tag / Name: Trimmed via `$.trim()`, minimum 2 characters.
+  2. Telephone Number: Trimmed, validated against `^\+?[0-9\s\-()]{10,18}$`.
+  3. Email Address: Trimmed, validated against `^[^\s@]+@[^\s@]+\.[^\s@]+$`.
+  4. Reservation Date: Required, rejected if prior to current calendar date (`todayStr`).
+  5. Arrival Time: Required.
+  6. Club Policy Agreement: Evaluated via `.prop('checked')`.
+* **Success State & Reset:** On valid submission, generates a demonstration voucher with `generateVoucherCode()`, displays estimated total, reveals confirmation via `.fadeIn(400)`, and resets all form inputs and selected station chips.
+* **Why a Browser Check Never Replaces a Server Check:**
+  Browser validation provides immediate, friendly UX feedback for visitors. However, client-side code runs in an untrusted environment: any user can bypass browser checks by disabling JavaScript, using browser DevTools to remove `required` attributes, or sending raw HTTP POST requests via curl or Postman. Server-side validation is strictly mandatory to enforce business logic, verify authorization, prevent malicious payloads (SQL Injection, XSS), and ensure database integrity on trusted infrastructure.
+
+---
+
+### 11.8 Defense Quick Reference & Oral Questions Cheat Sheet
+
+1. **What is the difference between `.text()` and `.html()`?**
+   * `.text()` escapes HTML special characters (safe against XSS, for plain text); `.html()` interprets and parses HTML markup into DOM nodes.
+2. **What is the difference between `.attr()` and `.prop()` on a checkbox?**
+   * `.attr('checked')` inspects the initial HTML attribute written in markup; `.prop('checked')` returns the live boolean state (`true`/`false`) of the user's current selection.
+3. **Why did we use event delegation for the station seats and reviews?**
+   * Because those cards and buttons are created dynamically from JavaScript data arrays. Direct binding (`$('.station-btn').on()`) would find 0 elements at startup. Delegation to the persistent parent catches bubbling events from elements created at any time.
+4. **What is the plain-JavaScript equivalent of `$('#el').addClass('active')`?**
+   * `document.getElementById('el').classList.add('active');`
+5. **What is the plain-JavaScript equivalent of `$('#el').slideToggle()`?**
+   * Vanilla JS has no native slide animation: you would have to write CSS keyframe transitions or a `requestAnimationFrame` loop that interpolates `height`, `padding-top`, `padding-bottom`, and `overflow: hidden`.
+6. **What happens if you omit `event.preventDefault()` in a form submit handler?**
+   * The browser performs native HTTP GET/POST submission, triggering a complete page refresh that wipes out the JavaScript application state, input values, and selected stations.
