@@ -180,6 +180,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (!calculatorForm || !zoneSelect || !hoursInput || !totalDisplay) return;
 
+  // Inject Squad / Group Size Selector
+  let squadBox = document.getElementById('calc-squad-box');
+  if (!squadBox) {
+    squadBox = document.createElement('div');
+    squadBox.id = 'calc-squad-box';
+    squadBox.className = 'mb-3';
+    squadBox.innerHTML = `
+      <label for="calc-party-size" class="form-label text-light fw-semibold small">Squad / Team Size:</label>
+      <select id="calc-party-size" class="form-select bg-dark text-light border-secondary">
+        <option value="1" selected>1 Solo Gamer (Individual Rate)</option>
+        <option value="2">2 Duo Gamers (2 PCs)</option>
+        <option value="5">5-Man Full Squad (VIP Bootcamp Priority)</option>
+      </select>
+    `;
+    const hoursWrapper = hoursInput.closest('.mb-3') || hoursInput.parentElement;
+    if (hoursWrapper && hoursWrapper.parentNode) {
+      hoursWrapper.parentNode.insertBefore(squadBox, hoursWrapper.nextSibling);
+    }
+  }
+
+  const partySizeSelect = document.getElementById('calc-party-size');
+
   // Create Recommendation Output Container
   let recommendationBox = document.getElementById('calc-recommendation-box');
   if (!recommendationBox && calcResultBox) {
@@ -195,48 +217,81 @@ document.addEventListener('DOMContentLoaded', () => {
   function updateSessionEstimate() {
     const zone = zoneSelect.value || 'standard';
     let hours = parseInt(hoursInput.value, 10);
+    const partyCount = partySizeSelect ? (parseInt(partySizeSelect.value, 10) || 1) : 1;
 
     // Validate bounds
     if (isNaN(hours) || hours < 1) hours = 1;
     if (hours > 12) hours = 12;
 
     const result = calculateTariffOptimization(zone, hours);
+    const totalBase = result.baseCost * partyCount;
+
+    // Check for 5-man Bootcamp pass advantage
+    let squadDeal = null;
+    if (partyCount === 5 && hours >= 6) {
+      const bootcampPkg = TARIFF_PACKAGES.find(p => p.id === 'bootcamp_pass');
+      if (bootcampPkg) {
+        const bootcampRate = zone === 'vip2' ? bootcampPkg.vip2Rate : (zone === 'vip1' ? bootcampPkg.vip1Rate : bootcampPkg.standardRate);
+        if (bootcampRate < totalBase) {
+          squadDeal = {
+            package: bootcampPkg,
+            cost: bootcampRate,
+            savings: totalBase - bootcampRate
+          };
+        }
+      }
+    }
 
     // Update main total display
-    totalDisplay.textContent = displayCurrency(result.baseCost);
+    const labelMultiplier = partyCount > 1 ? ` (${partyCount} Rigs)` : '';
+    totalDisplay.textContent = `${displayCurrency(totalBase)}${labelMultiplier}`;
 
     // Display smart package savings recommendation
     if (recommendationBox) {
-      if (result.bestDeal) {
-        recommendationBox.innerHTML = '';
+      recommendationBox.innerHTML = '';
+      if (squadDeal) {
+        const recText = document.createElement('span');
+        recText.className = 'badge bg-warning text-dark p-2 me-1 fw-bold';
+        recText.textContent = `🔥 5-Man Squad Deal: ${squadDeal.package.title}`;
+
+        const savingsText = document.createElement('span');
+        savingsText.className = 'text-accent d-block mt-1';
+        savingsText.textContent = `Save ${displayCurrency(squadDeal.savings)} with the 12-hour Squad Bootcamp Pass (${displayCurrency(squadDeal.cost)})!`;
+
+        recommendationBox.appendChild(recText);
+        recommendationBox.appendChild(savingsText);
+      } else if (result.bestDeal) {
         const recText = document.createElement('span');
         recText.className = 'badge bg-success text-dark p-2 me-1 fw-bold';
         recText.textContent = `💡 Smart Deal: ${result.bestDeal.package.title}`;
 
         const savingsText = document.createElement('span');
         savingsText.className = 'text-accent d-block mt-1';
-        savingsText.textContent = `Choose package for ${displayCurrency(result.bestDeal.cost)} and save ${displayCurrency(result.savings)}!`;
+        const teamSavings = result.savings * partyCount;
+        savingsText.textContent = `Choose package for ${displayCurrency(result.bestDeal.cost * partyCount)} and save ${displayCurrency(teamSavings)}!`;
 
         recommendationBox.appendChild(recText);
         recommendationBox.appendChild(savingsText);
       } else {
-        recommendationBox.innerHTML = '';
         const standardInfo = document.createElement('span');
         standardInfo.className = 'text-muted';
-        standardInfo.textContent = `Standard hourly billing at ${displayCurrency(getZoneHourlyRate(zone))} / hour. No advance prepayment required.`;
+        standardInfo.textContent = `Standard hourly billing at ${displayCurrency(getZoneHourlyRate(zone))} / hour per station. No advance prepayment required.`;
         recommendationBox.appendChild(standardInfo);
       }
     }
 
     // Sync proceed to booking button href with pre-filled query parameters
     if (proceedBtn) {
-      proceedBtn.href = `booking.html?zone=${encodeURIComponent(zone)}&hours=${hours}`;
+      proceedBtn.href = `booking.html?zone=${encodeURIComponent(zone)}&hours=${hours}&party=${partyCount}`;
     }
   }
 
   // Event Listeners for Real-Time Calculation
   zoneSelect.addEventListener('change', updateSessionEstimate);
   hoursInput.addEventListener('input', updateSessionEstimate);
+  if (partySizeSelect) {
+    partySizeSelect.addEventListener('change', updateSessionEstimate);
+  }
 
   calculatorForm.addEventListener('reset', () => {
     setTimeout(updateSessionEstimate, 10);

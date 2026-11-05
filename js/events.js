@@ -164,6 +164,17 @@ function createTournamentCard(item) {
   infoList.appendChild(prizeLi);
   infoList.appendChild(formatLi);
 
+  if (item.status === 'open') {
+    const countdownLi = document.createElement('li');
+    countdownLi.className = 'mt-1';
+    const countdownBadge = document.createElement('span');
+    countdownBadge.className = 'badge bg-dark border border-info text-info small live-countdown';
+    countdownBadge.setAttribute('data-event-date', item.date);
+    countdownBadge.textContent = '⏰ Calculating countdown...';
+    countdownLi.appendChild(countdownBadge);
+    infoList.appendChild(countdownLi);
+  }
+
   cardBody.appendChild(badgeRow);
   cardBody.appendChild(titleEl);
   cardBody.appendChild(infoList);
@@ -371,6 +382,86 @@ document.addEventListener('DOMContentLoaded', () => {
       tournamentChoice.appendChild(opt);
     }
   });
+
+  // Dynamic Prize Pool Distribution & Per-Player Payout Breakdown
+  const prizeCalcBox = document.createElement('div');
+  prizeCalcBox.id = 'tournament-prize-calc-box';
+  prizeCalcBox.className = 'p-3 bg-dark bg-opacity-75 rounded border border-info mb-3 small d-none';
+  regForm.parentNode.insertBefore(prizeCalcBox, regForm);
+
+  function updatePrizePoolBreakdown() {
+    const selectedTourney = TOURNAMENTS_DATA.find(t => t.id === tournamentChoice.value);
+    if (!selectedTourney) {
+      prizeCalcBox.classList.add('d-none');
+      return;
+    }
+
+    const totalPrize = selectedTourney.prizePool;
+    const firstPlace = Math.round(totalPrize * 0.6);
+    const secondPlace = Math.round(totalPrize * 0.3);
+    const thirdPlace = Math.round(totalPrize * 0.1);
+    const perPlayerFirst = Math.round(firstPlace / 5);
+    const entryPerPlayer = Math.round(selectedTourney.entryFee / 5);
+
+    prizeCalcBox.innerHTML = `
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <strong class="text-accent fw-bold">🏆 Prize Pool Distribution: ${selectedTourney.title}</strong>
+        <span class="badge bg-success text-dark">Total: ${typeof formatKZT === 'function' ? formatKZT(totalPrize) : totalPrize + ' ₸'}</span>
+      </div>
+      <div class="row g-2 text-light">
+        <div class="col-4">
+          <div class="p-2 bg-dark rounded border border-warning text-center">
+            <span class="d-block text-warning fw-bold">🥇 1st (60%)</span>
+            <strong>${typeof formatKZT === 'function' ? formatKZT(firstPlace) : firstPlace + ' ₸'}</strong>
+            <small class="d-block text-accent">(${typeof formatKZT === 'function' ? formatKZT(perPlayerFirst) : perPlayerFirst + ' ₸'} / player)</small>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="p-2 bg-dark rounded border border-secondary text-center">
+            <span class="d-block text-light fw-bold">🥈 2nd (30%)</span>
+            <strong>${typeof formatKZT === 'function' ? formatKZT(secondPlace) : secondPlace + ' ₸'}</strong>
+            <small class="d-block text-muted">(Per squad)</small>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="p-2 bg-dark rounded border border-secondary text-center">
+            <span class="d-block text-accent fw-bold">🥉 3rd (10%)</span>
+            <strong>${typeof formatKZT === 'function' ? formatKZT(thirdPlace) : thirdPlace + ' ₸'}</strong>
+            <small class="d-block text-muted">(${typeof formatKZT === 'function' ? formatKZT(entryPerPlayer) : entryPerPlayer + ' ₸'} entry)</small>
+          </div>
+        </div>
+      </div>
+    `;
+    prizeCalcBox.classList.remove('d-none');
+  }
+
+  tournamentChoice.addEventListener('change', updatePrizePoolBreakdown);
+
+  // Live Tournament Countdown Updater
+  function updateLiveEventCountdowns() {
+    const badges = document.querySelectorAll('.live-countdown');
+    const now = new Date().getTime();
+
+    badges.forEach(badge => {
+      const dateStr = badge.getAttribute('data-event-date');
+      if (!dateStr) return;
+      const target = new Date(`${dateStr}T11:00:00+05:00`).getTime();
+      const diff = target - now;
+
+      if (diff <= 0) {
+        badge.textContent = '🔴 Match Day Live!';
+        badge.className = 'badge bg-danger text-light small live-countdown';
+      } else {
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        badge.textContent = `⏰ Starts in: ${days}d ${hours}h ${mins}m`;
+      }
+    });
+  }
+
+  updateLiveEventCountdowns();
+  setInterval(updateLiveEventCountdowns, 30000);
 
   regForm.noValidate = true;
 
