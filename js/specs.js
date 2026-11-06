@@ -4,9 +4,11 @@
  * File: js/specs.js
  * Author: Adilet Ainadinov
  * Features:
+ *   - Esports Polling Rate & Motherboard Port Optimizer (pc-specs.html)
  *   - Peripheral Driver & DPI Pre-Configuration Request Validation (pc-specs.html)
  *   - Random Hardware Ticket Reference Generator via Math.random()
  *   - Real-Time FAQ Keyword Search & Filter Engine (rules.html)
+ *   - Delegated Event Listener for FAQ "Helpful 👍" Voting (rules.html)
  *   - Administrator Inquiry Form Validation with Character Counter (rules.html)
  * ================================================================================
  */
@@ -14,7 +16,77 @@
 'use strict';
 
 document.addEventListener('DOMContentLoaded', () => {
-  // 1. DRIVER PRE-LOAD FORM (pc-specs.html)
+  // 1. ESPORTS POLLING RATE & MOTHERBOARD PORT OPTIMIZER (pc-specs.html)
+  const driverSection = document.getElementById('driver-request-section');
+  if (driverSection) {
+    const optimizerCard = document.createElement('div');
+    optimizerCard.id = 'polling-optimizer-box';
+    optimizerCard.className = 'p-3 bg-dark bg-opacity-75 rounded border border-info mb-4 shadow-sm';
+    optimizerCard.innerHTML = `
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h4 class="h6 text-accent fw-bold mb-0">⚡ Esports Hardware Optimizer: Polling Rate &amp; Port Configuration</h4>
+        <span class="badge bg-info text-dark">Sub-1ms Latency</span>
+      </div>
+      <p class="small text-muted mb-3">Calculate hardware response time and determine the optimal motherboard USB port for your high-performance gaming gear.</p>
+      <div class="row g-2 align-items-center mb-2">
+        <div class="col-12 col-md-5">
+          <label for="polling-rate-select" class="form-label small text-light fw-semibold mb-1">Mouse / Keyboard Polling Rate:</label>
+          <select id="polling-rate-select" class="form-select form-select-sm bg-dark text-light border-secondary">
+            <option value="1000" selected>1,000 Hz (1.000 ms • Standard Esports)</option>
+            <option value="2000">2,000 Hz (0.500 ms • High Precision)</option>
+            <option value="4000">4,000 Hz (0.250 ms • Pro Wireless)</option>
+            <option value="8000">8,000 Hz (0.125 ms • Ultra Low Latency)</option>
+          </select>
+        </div>
+        <div class="col-12 col-md-7">
+          <div id="polling-calc-results" class="p-2 bg-dark rounded border border-secondary small">
+            <div class="d-flex justify-content-between">
+              <span>Input Latency: <strong id="polling-latency-val" class="text-accent">1.000 ms</strong></span>
+              <span>Delay Reduction: <strong id="polling-reduction-val" class="text-success">Base Standard</strong></span>
+            </div>
+            <div class="text-muted mt-1" id="polling-port-advice">
+              🔌 Recommended Port: Any USB 3.0/3.2 Port (Standard Arena, VIP 1, VIP 2).
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    const formEl = document.getElementById('driver-request-form');
+    if (formEl) {
+      formEl.parentNode.insertBefore(optimizerCard, formEl);
+    }
+
+    const pollingSelect = document.getElementById('polling-rate-select');
+    const latencyVal = document.getElementById('polling-latency-val');
+    const reductionVal = document.getElementById('polling-reduction-val');
+    const portAdvice = document.getElementById('polling-port-advice');
+
+    if (pollingSelect && latencyVal && reductionVal && portAdvice) {
+      pollingSelect.addEventListener('change', () => {
+        const rate = parseInt(pollingSelect.value, 10);
+        const latency = (1000 / rate).toFixed(3);
+        const reduction = rate === 1000 ? 'Base Standard' : `${(((1 - (1000 / rate)) * 100)).toFixed(1)}% faster!`;
+        let advice = '';
+
+        if (rate === 1000) {
+          advice = '🔌 Recommended Port: Any USB 3.0/3.2 Port (Standard Arena, VIP 1, VIP 2).';
+        } else if (rate === 2000) {
+          advice = '⚡ Recommended Port: Motherboard Rear USB 3.2 Gen 1 (Avoid front panel hubs).';
+        } else if (rate === 4000) {
+          advice = '🚀 Recommended Port: Direct CPU-connected Red USB 3.2 Gen 2 Port (VIP 1 or VIP 2).';
+        } else if (rate === 8000) {
+          advice = '🏆 Recommended Port: Direct Rear USB 3.2 Gen 2 (VIP 2 Alienware 360Hz Bootcamp recommended for 0.125ms!).';
+        }
+
+        latencyVal.textContent = `${latency} ms`;
+        reductionVal.textContent = reduction;
+        portAdvice.textContent = advice;
+      });
+    }
+  }
+
+  // 2. DRIVER PRE-LOAD FORM (pc-specs.html)
   const driverForm = document.getElementById('driver-request-form');
   const driverSoftware = document.getElementById('driver-software');
   const targetZone = document.getElementById('target-zone');
@@ -132,6 +204,44 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         countStatus.textContent = `Found ${matchCount} matching rules in FAQ.`;
       }
+    });
+
+    // Delegated Helpful Voting System
+    const accordionBodies = faqAccordion.querySelectorAll('.accordion-body');
+    accordionBodies.forEach((body, idx) => {
+      const voteBar = document.createElement('div');
+      voteBar.className = 'mt-3 pt-2 border-top border-secondary d-flex flex-wrap justify-content-between align-items-center gap-2';
+      voteBar.innerHTML = `
+        <span class="text-muted small">Was this house rule explanation helpful?</span>
+        <button type="button" class="btn btn-outline-info btn-sm faq-helpful-btn" data-faq-index="${idx}">
+          👍 Helpful (<span class="vote-num">${12 + idx * 5}</span>)
+        </button>
+      `;
+      body.appendChild(voteBar);
+    });
+
+    // Delegated event listener bound to the persistent parent faqAccordion
+    faqAccordion.addEventListener('click', (event) => {
+      const btn = event.target.closest('.faq-helpful-btn');
+      if (!btn) return;
+      event.preventDefault();
+
+      if (btn.classList.contains('voted')) return;
+
+      const numEl = btn.querySelector('.vote-num');
+      if (numEl) {
+        const currentCount = parseInt(numEl.textContent, 10) || 0;
+        numEl.textContent = (currentCount + 1).toString();
+      }
+
+      btn.classList.add('voted', 'btn-success', 'text-dark');
+      btn.classList.remove('btn-outline-info');
+      btn.disabled = true;
+
+      const feedback = document.createElement('span');
+      feedback.className = 'badge bg-success text-dark ms-2';
+      feedback.textContent = 'Thanks for your feedback!';
+      btn.parentNode.appendChild(feedback);
     });
   }
 
