@@ -270,8 +270,9 @@ $(function () {
   // Working copy of reviews data
   const activeReviews = [...REVIEWS_DATA];
   let currentCategory = 'all';
+  let currentSort = 'rating';
 
-  // 1. DYNAMIC CONTROLS BAR: Search input, Category filter buttons, and + Write Review toggle
+  // 1. DYNAMIC CONTROLS BAR: Search input, Category filter buttons, Sort buttons, and + Write Review toggle
   const $controlsContainer = $('<div id="reviews-controls-bar" class="bg-custom-card p-3 rounded-3 border border-secondary mb-4 shadow-sm"></div>');
   const $topControlsRow = $('<div class="row g-3 align-items-center"></div>');
 
@@ -328,8 +329,37 @@ $(function () {
   $topControlsRow.append($searchCol, $filterCol);
   $controlsContainer.append($topControlsRow);
 
+  // Dynamic Sort Bar
+  const $sortBar = $('<div class="d-flex flex-wrap align-items-center gap-2 mt-3 pt-2 border-top border-secondary small"></div>');
+  $sortBar.append('<span class="text-muted fw-semibold">Sort Reviews:</span>');
+  const sortOptions = [
+    { key: 'rating', label: '★ Highest Rating' },
+    { key: 'date', label: '📅 Newest First' },
+    { key: 'helpful', label: '👍 Most Helpful' }
+  ];
+  $.each(sortOptions, function (i, opt) {
+    const isDefault = opt.key === 'rating';
+    const $sortBtn = $('<button type="button" class="btn btn-sm review-sort-btn"></button>')
+      .attr('data-sort-key', opt.key)
+      .text(opt.label)
+      .addClass(isDefault ? 'btn-info text-dark fw-bold active' : 'btn-outline-secondary');
+
+    $sortBtn.on('click', function () {
+      currentSort = opt.key;
+      $(this).addClass('btn-info text-dark fw-bold active')
+        .removeClass('btn-outline-secondary')
+        .siblings('.review-sort-btn')
+        .removeClass('btn-info text-dark fw-bold active')
+        .addClass('btn-outline-secondary');
+      applyFilters();
+    });
+
+    $sortBar.append($sortBtn);
+  });
+  $controlsContainer.append($sortBar);
+
   // Status Counter Row
-  const $statusRow = $('<div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top border-secondary small text-muted"></div>');
+  const $statusRow = $('<div class="d-flex justify-content-between align-items-center mt-2 pt-2 border-top border-secondary small text-muted"></div>');
   const $countIndicator = $('<span id="reviews-count-indicator"></span>');
   const $spotLightBadge = $('<span class="text-accent d-none d-sm-inline"></span>');
 
@@ -341,8 +371,39 @@ $(function () {
   $statusRow.append($countIndicator, $spotLightBadge);
   $controlsContainer.append($statusRow);
 
+  // Dynamic Rating Summary Breakdown Bar
+  function renderRatingSummary() {
+    $('#reviews-rating-summary').remove();
+    const totalReviews = activeReviews.length;
+    const avgScore = (activeReviews.reduce((sum, r) => sum + r.rating, 0) / totalReviews).toFixed(1);
+    const fiveStarCount = activeReviews.filter(r => r.rating === 5).length;
+    const fiveStarPct = Math.round((fiveStarCount / totalReviews) * 100);
+
+    const $summaryBox = $(`
+      <div id="reviews-rating-summary" class="p-3 bg-dark bg-opacity-75 rounded-3 border border-secondary mb-3 shadow-sm">
+        <div class="row g-2 align-items-center">
+          <div class="col-12 col-md-4 text-center text-md-start">
+            <span class="h3 fw-bold text-accent mb-0">${avgScore} ★</span>
+            <span class="small text-muted d-block">Overall 2GIS Player Satisfaction</span>
+          </div>
+          <div class="col-12 col-md-8">
+            <div class="d-flex justify-content-between small text-light mb-1">
+              <span>5-Star Verified Reviews</span>
+              <span><strong>${fiveStarPct}%</strong> (${fiveStarCount} of ${totalReviews})</span>
+            </div>
+            <div class="progress" style="height: 8px;">
+              <div class="progress-bar bg-info" role="progressbar" style="width: ${fiveStarPct}%;" aria-valuenow="${fiveStarPct}" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `);
+    $reviewsRow.before($summaryBox);
+  }
+
   // Insert controls bar dynamically before the reviews row
   $reviewsRow.before($controlsContainer);
+  renderRatingSummary();
 
 
   // 2. DYNAMIC REVIEW SUBMISSION FORM CARD
@@ -488,10 +549,20 @@ $(function () {
   });
 
 
-  // Centralized filter & render pipeline
+  // Centralized filter, sort & render pipeline
   function applyFilters() {
     const query = $searchInput.val();
-    const filtered = filterReviews(activeReviews, currentCategory, query);
+    let filtered = filterReviews(activeReviews, currentCategory, query);
+
+    // Apply active sort criterion
+    if (currentSort === 'rating') {
+      filtered = [...filtered].sort((a, b) => b.rating - a.rating);
+    } else if (currentSort === 'date') {
+      filtered = [...filtered].sort((a, b) => new Date(b.date) - new Date(a.date));
+    } else if (currentSort === 'helpful') {
+      filtered = [...filtered].sort((a, b) => (parseInt(b.votes || 0, 10)) - (parseInt(a.votes || 0, 10)));
+    }
+
     const count = renderReviewsList(filtered, $reviewsRow);
 
     // Update counter display with .text()
@@ -604,6 +675,51 @@ $(function () {
     setTimeout(function () {
       $status.fadeOut(300);
     }, 4000);
+  });
+
+  // 4. INTERACTIVE FACILITY GALLERY MODAL PREVIEW
+  $('#gallery-section').on('click', '.facility-img-thumb, figure, .card-img-top', function (e) {
+    e.preventDefault();
+    const $img = $(this).is('img') ? $(this) : $(this).find('img');
+    if ($img.length === 0) return;
+
+    const imgSrc = $img.attr('src');
+    const imgAlt = $img.attr('alt') || 'QazaqPeek Facility Area';
+    const caption = $img.closest('figure, .card').find('figcaption, h3, .card-title').text() || imgAlt;
+
+    let $galleryModal = $('#qp-gallery-modal');
+    if ($galleryModal.length === 0) {
+      $galleryModal = $(`
+        <div class="modal fade" id="qp-gallery-modal" tabindex="-1" aria-labelledby="qpGalleryModalHeading" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content bg-custom-card text-light border-secondary">
+              <div class="modal-header bg-dark border-secondary">
+                <h5 class="modal-title text-accent fw-bold" id="qpGalleryModalHeading">Venue Arena Preview</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body text-center p-3">
+                <img id="qp-modal-preview-img" src="" alt="" class="img-fluid rounded border border-secondary mb-3 shadow" style="max-height: 480px; width: 100%; object-fit: cover;">
+                <h4 id="qp-modal-preview-title" class="h6 text-light mb-1"></h4>
+                <p class="small text-muted mb-0">High-refresh rate arena stations with 240Hz–360Hz monitors and zero LAN jitter at Kenesary 69.</p>
+              </div>
+              <div class="modal-footer border-secondary justify-content-between">
+                <a href="booking.html" class="btn btn-info btn-sm fw-bold text-dark">Book a Station in this Zone &rarr;</a>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).appendTo('body');
+    }
+
+    $galleryModal.find('#qp-modal-preview-img').attr('src', imgSrc).attr('alt', imgAlt);
+    $galleryModal.find('#qp-modal-preview-title').text(caption);
+
+    // Show modal via Bootstrap Modal API or trigger
+    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+      const bsModal = bootstrap.Modal.getOrCreateInstance($galleryModal[0]);
+      bsModal.show();
+    }
   });
 
   // Initial render
