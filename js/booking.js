@@ -65,6 +65,17 @@ const CLUB_STATIONS = [
 ];
 
 /**
+ * Club Promotional Discount Codes Dictionary
+ * Real esports cyber club promotion vouchers for Astana gamers and students.
+ */
+const CLUB_PROMO_CODES = {
+  'ASTANA2026': { discount: 15, label: '15% Off Astana Cyber Cup Launch' },
+  'AITU10': { discount: 10, label: '10% Off AITU Esports Society Discount' },
+  'NIGHTGRIND': { discount: 20, label: '20% Off Midnight Gaming Pass' },
+  'QAZAQPEEK': { discount: 25, label: '25% Off VIP Arena Welcome Promo' }
+};
+
+/**
  * 2. REUSABLE UTILITY FUNCTIONS
  */
 
@@ -104,6 +115,9 @@ $(function () {
   // Selected station IDs tracked in a Set
   const selectedSeats = new Set();
 
+  // Active promotional discount tracked in memory
+  let activePromo = null;
+
   // Cached jQuery element references
   const $timeSlotSelect = $('#time-slot');
   const $partySizeInput = $('#party-size');
@@ -132,6 +146,13 @@ $(function () {
   } else if (paramZone === 'vip2') {
     $('#zone-bootcamp').prop('checked', true);
   }
+  const paramParty = urlParams.get('party');
+  if (paramParty && $partySizeInput.length) {
+    const parsedParty = parseInt(paramParty, 10);
+    if (!isNaN(parsedParty) && parsedParty >= 1 && parsedParty <= 5) {
+      $partySizeInput.val(parsedParty);
+    }
+  }
 
   /**
    * Determine currently active zone from radio buttons using :checked filter selector.
@@ -144,20 +165,103 @@ $(function () {
   }
 
   /**
-   * Recalculate and update the live total price display using jQuery .text().
+   * Recalculate and update the live total price display using jQuery .text() and .html().
+   * Computes base cost, applies active promo code discount, and outputs live savings.
    * Demonstrates: .text() vs .html() (safely inserting formatted currency text).
+   * @returns {{ baseCost: number, finalCost: number, savings: number, zone: string, pkg: string, count: number }}
    */
   function refreshTotalDisplay() {
     const zone = getSelectedZone();
     const pkg = $timeSlotSelect.length ? $timeSlotSelect.val() : 'hourly';
     const count = selectedSeats.size > 0 ? selectedSeats.size : (parseInt($partySizeInput.val(), 10) || 1);
-    const total = calculateBookingPrice(zone, pkg, count);
-    const formatted = typeof formatKZT === 'function' ? formatKZT(total) : `${total} ₸`;
+    const baseCost = calculateBookingPrice(zone, pkg, count);
+    let finalCost = baseCost;
+    let savings = 0;
+
+    if (activePromo) {
+      savings = Math.round(baseCost * (activePromo.discount / 100));
+      finalCost = Math.max(0, baseCost - savings);
+    }
+
+    const formattedBase = typeof formatKZT === 'function' ? formatKZT(baseCost) : `${baseCost} ₸`;
+    const formattedFinal = typeof formatKZT === 'function' ? formatKZT(finalCost) : `${finalCost} ₸`;
 
     if ($totalDisplay.length) {
-      $totalDisplay.text(formatted);
+      if (activePromo) {
+        $totalDisplay.html(`${formattedFinal} <span class="badge bg-success ms-1 fs-6">-${activePromo.discount}%</span> <small class="text-decoration-line-through text-muted ms-1 fs-6">${formattedBase}</small>`);
+      } else {
+        $totalDisplay.text(formattedBase);
+      }
     }
+
+    return { baseCost, finalCost, savings, zone, pkg, count };
   }
+
+  // Dynamically inject the Promo Code Box directly below the total display container
+  const $totalCard = $totalDisplay.closest('.p-3.bg-dark');
+  if ($totalCard.length && $('#booking-promo-container').length === 0) {
+    const $promoBox = $(`
+      <div id="booking-promo-container" class="mt-3 pt-3 border-top border-secondary">
+        <div class="row g-2 align-items-center">
+          <div class="col-12 col-md-7">
+            <label for="booking-promo-input" class="form-label small text-muted mb-1 fw-semibold">Club Promo Code or Student Pass:</label>
+            <div class="input-group input-group-sm">
+              <input type="text" id="booking-promo-input" class="form-control bg-dark text-light border-secondary text-uppercase" placeholder="e.g. ASTANA2026 or AITU10" maxlength="15" autocomplete="off">
+              <button type="button" id="btn-apply-promo" class="btn btn-outline-info fw-semibold">Apply Code</button>
+            </div>
+          </div>
+          <div class="col-12 col-md-5 text-md-end">
+            <div id="booking-promo-feedback" class="small mt-1 text-muted">Try: <code>ASTANA2026</code> (-15%) or <code>AITU10</code> (-10%)</div>
+          </div>
+        </div>
+      </div>
+    `);
+    $totalCard.append($promoBox);
+  }
+
+  // Handle Promo Code Application
+  $bookingForm.on('click', '#btn-apply-promo', function (e) {
+    e.preventDefault();
+    const $input = $('#booking-promo-input');
+    const $feedback = $('#booking-promo-feedback');
+    const rawCode = $.trim($input.val()).toUpperCase();
+
+    if (!rawCode) {
+      activePromo = null;
+      $feedback.removeClass('text-success text-danger').addClass('text-muted').html('Try: <code>ASTANA2026</code> (-15%) or <code>AITU10</code> (-10%)');
+      $input.removeClass('is-valid is-invalid');
+      refreshTotalDisplay();
+      return;
+    }
+
+    if (CLUB_PROMO_CODES[rawCode]) {
+      activePromo = {
+        code: rawCode,
+        discount: CLUB_PROMO_CODES[rawCode].discount,
+        label: CLUB_PROMO_CODES[rawCode].label
+      };
+      $feedback.removeClass('text-muted text-danger').addClass('text-success fw-semibold')
+        .html(`✓ Promo <strong>${rawCode}</strong> applied (-${activePromo.discount}% off)!`);
+      $input.addClass('is-valid').removeClass('is-invalid');
+      refreshTotalDisplay();
+      if (typeof displayGlobalToast === 'function') {
+        displayGlobalToast('Promo Applied!', `${activePromo.label} activated successfully.`, 'success');
+      }
+    } else {
+      activePromo = null;
+      $feedback.removeClass('text-muted text-success').addClass('text-danger fw-semibold')
+        .text('✕ Invalid promo code. Valid: ASTANA2026, AITU10, NIGHTGRIND.');
+      $input.addClass('is-invalid').removeClass('is-valid');
+      refreshTotalDisplay();
+    }
+  });
+
+  $bookingForm.on('keydown', '#booking-promo-input', function (e) {
+    if (e.which === 13) {
+      e.preventDefault();
+      $('#btn-apply-promo').trigger('click');
+    }
+  });
 
 
   // 4. DYNAMIC DOM GENERATION: INTERACTIVE FLOOR MAP SEATING GRID
@@ -185,6 +289,17 @@ $(function () {
 
   const $gridWrapper = $seatingCard.find('.station-grid-wrapper');
 
+  // Dynamic Zone Filters Bar
+  const $zoneFilterBar = $(`
+    <div id="seating-zone-filter-bar" class="d-flex flex-wrap gap-2 mb-3">
+      <button type="button" class="btn btn-sm btn-info text-dark fw-bold active seating-filter-btn" data-zone-filter="all">All Stations (20)</button>
+      <button type="button" class="btn btn-sm btn-outline-secondary seating-filter-btn" data-zone-filter="standard">Standard Arena (10)</button>
+      <button type="button" class="btn btn-sm btn-outline-secondary seating-filter-btn" data-zone-filter="vip1">VIP 1 Lounge (6)</button>
+      <button type="button" class="btn btn-sm btn-outline-secondary seating-filter-btn" data-zone-filter="vip2">VIP 2 Bootcamp (4)</button>
+    </div>
+  `);
+  $gridWrapper.before($zoneFilterBar);
+
   const zoneSections = [
     { zoneKey: 'standard', title: 'Standard Arena (A1 - A10)', badge: '800 ₸/hr • 280Hz' },
     { zoneKey: 'vip1', title: 'VIP 1 Lounge (B1 - B6)', badge: '1,200 ₸/hr • 310Hz' },
@@ -192,7 +307,8 @@ $(function () {
   ];
 
   $.each(zoneSections, function (idx, section) {
-    const $rowBox = $('<div class="p-2 bg-dark rounded border border-secondary station-zone-box"></div>');
+    const $rowBox = $('<div class="p-2 bg-dark rounded border border-secondary station-zone-box"></div>')
+      .attr('data-zone-key', section.zoneKey);
     const $rowHeader = $(`
       <div class="d-flex justify-content-between align-items-center mb-2 px-1">
         <span class="fw-bold small text-light">${section.title}</span>
@@ -247,6 +363,34 @@ $(function () {
     }
   }
 
+
+  // Event: Seating zone filter buttons with method chaining & traversal
+  $seatingCard.on('click', '.seating-filter-btn', function (event) {
+    event.preventDefault();
+    const $btn = $(this);
+    const filterKey = $btn.attr('data-zone-filter');
+
+    // Method chaining demonstration (4 links):
+    $btn.addClass('btn-info text-dark fw-bold active')
+      .removeClass('btn-outline-secondary')
+      .siblings('.seating-filter-btn')
+      .removeClass('btn-info text-dark fw-bold active')
+      .addClass('btn-outline-secondary');
+
+    const $boxes = $seatingCard.find('.station-zone-box');
+    if (filterKey === 'all') {
+      $boxes.slideDown(200);
+    } else {
+      $boxes.each(function () {
+        const $box = $(this);
+        if ($box.attr('data-zone-key') === filterKey) {
+          $box.slideDown(200);
+        } else {
+          $box.slideUp(200);
+        }
+      });
+    }
+  });
 
   /**
    * ==============================================================================
@@ -523,12 +667,16 @@ $(function () {
     const zone = getSelectedZone();
     const pkg = $timeSlotSelect.val() || 'hourly';
     const seatList = selectedSeats.size > 0 ? Array.from(selectedSeats).join(', ') : 'Station Auto-Assigned';
-    const totalCost = calculateBookingPrice(zone, pkg, selectedSeats.size > 0 ? selectedSeats.size : 1);
+    const calc = refreshTotalDisplay();
     const voucherRef = generateVoucherCode();
     const cleanName = $.trim($clientNameInput.val());
     const dateVal = $bookingDateInput.val();
     const timeVal = $bookingTimeInput.val();
-    const formattedTotal = typeof formatKZT === 'function' ? formatKZT(totalCost) : `${totalCost} ₸`;
+    const formattedTotal = typeof formatKZT === 'function' ? formatKZT(calc.finalCost) : `${calc.finalCost} ₸`;
+
+    const promoBadge = activePromo
+      ? `<span class="badge bg-success ms-1">Promo ${activePromo.code} (-${activePromo.discount}%)</span>`
+      : '';
 
     const voucherHtml = `
       <h4 class="alert-heading h5 fw-bold">Reservation Voucher Confirmed!</h4>
@@ -537,7 +685,7 @@ $(function () {
       <div class="d-flex flex-wrap justify-content-between small">
         <span>Voucher Code: <strong id="booking-reference-code">${voucherRef}</strong></span>
         <span>Date &amp; Time: <strong id="booking-confirmed-time">${dateVal} at ${timeVal}</strong></span>
-        <span>Estimated Total: <strong>${formattedTotal}</strong></span>
+        <span>Estimated Total: <strong>${formattedTotal}</strong> ${promoBadge}</span>
         <span>Hold Period: <strong>15 Mins Past Arrival</strong></span>
       </div>
       <p class="small text-muted mt-2 mb-0">
@@ -590,6 +738,9 @@ $(function () {
   // Handle Form Reset
   $bookingForm.on('reset', function () {
     selectedSeats.clear();
+    activePromo = null;
+    $('#booking-promo-input').val('').removeClass('is-valid is-invalid');
+    $('#booking-promo-feedback').removeClass('text-success text-danger').addClass('text-muted').html('Try: <code>ASTANA2026</code> (-15%) or <code>AITU10</code> (-10%)');
     $seatingCard.find('.station-btn.selected')
       .removeClass('btn-info text-dark fw-bold selected')
       .addClass('btn-outline-info');
@@ -600,6 +751,54 @@ $(function () {
     $confirmationAlert.addClass('d-none');
     setTimeout(refreshTotalDisplay, 10);
   });
+
+  // 5. INTERACTIVE BOOTSTRAP MODAL INTEGRATION & ONE-CLICK CONFIRM
+  const $modalConfirm = $('#modal-confirm');
+  if ($modalConfirm.length) {
+    // Dynamically populate modal body with live reservation values upon open
+    $modalConfirm.on('show.bs.modal', function () {
+      const calc = refreshTotalDisplay();
+      const cleanName = $.trim($clientNameInput.val()) || 'Guest Gamer';
+      const cleanPhone = $.trim($clientPhoneInput.val()) || 'Not provided';
+      const dateVal = $bookingDateInput.val() || todayStr;
+      const timeVal = $bookingTimeInput.val() || '18:00';
+      const seatList = selectedSeats.size > 0 ? Array.from(selectedSeats).join(', ') : 'Station Auto-Assigned';
+      const pkgLabel = BOOKING_PRICING[calc.pkg]?.label || calc.pkg;
+      const formattedPrice = typeof formatKZT === 'function' ? formatKZT(calc.finalCost) : `${calc.finalCost} ₸`;
+
+      const previewHtml = `
+        <div class="p-3 mb-3 bg-dark rounded border border-info border-opacity-50">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <strong class="text-accent h6 mb-0">${cleanName}</strong>
+            <span class="badge bg-info text-dark text-uppercase">${calc.zone} Arena</span>
+          </div>
+          <div class="small text-light mb-1">Contact Phone: <strong>${cleanPhone}</strong></div>
+          <div class="small text-light mb-1">Reserved Stations: <strong>${seatList}</strong> (${calc.count} rig${calc.count > 1 ? 's' : ''})</div>
+          <div class="small text-light mb-1">Tariff Package: <strong>${pkgLabel}</strong></div>
+          <div class="small text-light mb-1">Schedule: <strong>${dateVal} at ${timeVal}</strong></div>
+          <hr class="border-secondary my-2">
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="small text-muted">Estimated Pay-at-Desk:</span>
+            <span class="h5 text-accent fw-bold mb-0">${formattedPrice} ${activePromo ? `<span class="badge bg-success ms-1 small">Promo -${activePromo.discount}%</span>` : ''}</span>
+          </div>
+        </div>
+        <ul class="small text-light mb-2 ps-3">
+          <li>15-minute station hold guarantee past arrival time at Kenesary 69.</li>
+          <li>Payment upon check-in at reception via Kaspi QR or Cash.</li>
+          <li>Night packages (22:00–08:00) require a physical ID.</li>
+          <li>Free chilled water available at the beverage bar.</li>
+        </ul>
+        <p class="text-muted small mb-0">Click <strong>Confirm Booking</strong> to finalize your voucher immediately.</p>
+      `;
+
+      $modalConfirm.find('.modal-body').html(previewHtml);
+    });
+
+    // Make "Confirm Booking" button in modal trigger form submit and generate voucher
+    $modalConfirm.find('.modal-footer .btn-info').on('click', function () {
+      $bookingForm.trigger('submit');
+    });
+  }
 
   // Initial calculation
   refreshTotalDisplay();
