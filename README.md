@@ -1,4 +1,4 @@
-# QazaqPeek Cyber Club Astana — Midterm Project
+# QazaqPeek Cyber Club Astana — Endterm Project (Final Submission)
 
 ## 1. Project Overview & Venue Information
 * **Course:** Introduction to Web Technologies
@@ -395,3 +395,110 @@ The original vanilla JavaScript implementations are preserved verbatim in [`old-
    * Vanilla JS has no native slide animation: you would have to write CSS keyframe transitions or a `requestAnimationFrame` loop that interpolates `height`, `padding-top`, `padding-bottom`, and `overflow: hidden`.
 6. **What happens if you omit `event.preventDefault()` in a form submit handler?**
    * The browser performs native HTTP GET/POST submission, triggering a complete page refresh that wipes out the JavaScript application state, input values, and selected stations.
+
+---
+
+## 12. Endterm Project: Complete Interactive Site & Technology Separation (Final Milestone)
+
+### 12.1 Overview & Strict Compliance with Endterm Rules
+The **Endterm Project** brings the entire QazaqPeek Cyber Club web platform to life. In strict compliance with course rules:
+* **No New Topic:** Continued development of the same 7-page QazaqPeek Cyber Club Astana platform (`web-assignment1`).
+* **HTML/CSS Freeze Maintained:** Zero hand-written markup and zero hand-written CSS rules were added. All new dynamic controls, calculators, badges, progress bars, and modal bodies are constructed and manipulated dynamically in JavaScript and jQuery using pre-existing Bootstrap 5 and venue CSS classes.
+* **Finished Logic & Zero Dead Elements:** Every button executes a real action, every form validates and confirms, and every user pathway finishes completely on-screen.
+* **Strict Technology Separation:** Plain JavaScript and jQuery features are cleanly segregated in independent files. Dias and Adilet each authored both Plain JavaScript and jQuery features and are prepared for oral defense on both technologies.
+
+---
+
+### 12.2 Technology Division & Authorship Matrix
+
+| Page | Feature Description | Script File | Technology | Written By |
+| :--- | :--- | :--- | :--- | :--- |
+| **`booking.html`** | Interactive Seating Engine, Zone Filter Bar, Real-time Pricing, Promo Discount Code Engine, Modal Voucher Preview & Confirmation Flow | `js/booking.js` | **jQuery 3.7.1** | **Adilet Ainadinov** |
+| **`login.html`** | Password Regex Strength Checklist, Show/Hide Password Toggle, Self-Service SMS PIN Reset Simulator, Welcome Bonus & Deposit Tier Calculator | `js/login.js` | **Plain JavaScript** | **Adilet Ainadinov** |
+| **`pc-specs.html`** | Hardware Rig Specs, Esports Polling Rate & Motherboard Port Optimizer, Driver Pre-load Request Form Validation with Reference Generator | `js/specs.js` | **Plain JavaScript** | **Adilet Ainadinov** |
+| **`rules.html`** | FAQ Real-time Search Filter, Delegated "Helpful 👍" Voting System, Administrator Inquiry Form with Live Character Counter | `js/specs.js` | **Plain JavaScript** | **Adilet Ainadinov** |
+| **`index.html`** | 2GIS Reviews Feed, Category Filter, Review Sorting (Rating/Date/Helpful), Live 5★ Rating Distribution Progress Bar, Dynamic Facility Photo Gallery Lightbox | `js/home.js` | **jQuery 3.7.1** | **Dias Tursynbay** |
+| **`events.html`** | LAN Tournament Catalog, Status Filter, Live Matchday Countdowns, 5-Man Squad Registration Validation, Real-time Prize Pool Split Calculator | `js/events.js` | **Plain JavaScript** | **Dias Tursynbay** |
+| **`services.html`** | Tariff Catalog, Session Cost Estimator, Smart Package Deal Optimizer, 5-Man Squad Bootcamp Multiplier, Deep-linking to Reservation | `js/services.js` | **Plain JavaScript** | **Dias Tursynbay** |
+| **All Pages** | Active Navigation Highlighting, 24/7 Astana UTC+5 Live Status Badge, Animated Back-to-Top Button, Global Accessible Toast Notifications | `js/main.js` | **jQuery 3.7.1** | **Dias & Adilet (Team)** |
+
+---
+
+### 12.3 What Was Added to Each Feature Since Previous Defense (New Work Breakdown)
+
+In accordance with the Endterm specification requirement (*"Work that was already defended in a previous assignment counts only if you have extended it with new functionality — say in the README what you added to each feature since it was last defended"*):
+
+#### 1. Station Reservation Engine (`js/booking.js` — jQuery, Adilet Ainadinov)
+* **What was previously defended (Assignment 4):** Basic 3-step form validation, static seating grid generation from array, selecting seats, total price display, fade-in voucher alert.
+* **NEW FUNCTIONALITY ADDED FOR ENDTERM:**
+  1. **Dynamic Promo Code & Discount Engine:** Added `CLUB_PROMO_CODES` dictionary (`ASTANA2026` for -15%, `AITU10` for -10%, `NIGHTGRIND` for -20%). Dynamically injected promo input box, validation, live calculation of discounted price with strikethrough original price, and promo badge recorded on the generated voucher.
+  2. **Seating Map Zone Filter Bar:** Added dynamic filter buttons (*All Stations*, *Standard Arena*, *VIP 1 Lounge*, *VIP 2 Bootcamp*) with jQuery method chaining and animated `.slideDown()` / `.slideUp()` transitions.
+  3. **Interactive Modal Voucher Preview & Confirmation Execution:** The previously static Bootstrap modal `#modal-confirm` is now dynamically populated with live reservation data (Gamer Tag, phone, selected seat chips, date, time, total) upon opening. Clicking *«Confirm Booking»* inside the modal now triggers the form submission `$bookingForm.trigger('submit')`, eliminating the dead button and finalizing the booking.
+  4. **Deep-link Party Size Sync:** Automatically populates `#party-size` from URL search parameters (`?party=...`) routed from `services.html`.
+
+#### 2. Member Security Portal (`js/login.js` — Plain JS, Adilet Ainadinov)
+* **What was previously defended (Assignment 5):** Front-end validation for login and register, show/hide password toggle, live password regex checklist (8+ chars, upper, lower, digit, special).
+* **NEW FUNCTIONALITY ADDED FOR ENDTERM:**
+  1. **Self-Service SMS PIN Reset Simulator:** Replaced static text in `#pin-recovery-help` with a complete interactive multi-step PIN reset interface created entirely in DOM code. Validates phone number, generates a random 4-digit code (`Math.random()`), simulates an on-screen SMS dispatch notification, and validates SMS code and new PIN before confirming the update.
+  2. **Welcome Bonus & Deposit Tier Calculator:** Added an interactive deposit reward calculator for new players previewing their starting gaming balance (500 ₸ welcome bonus + first top-up matching bonus) and status badge (*Bronze*, *Silver*, *Gold VIP*).
+  3. **Enhanced Member Card Confirmation:** On valid registration, renders a rich demonstration club card with unique Member ID, contact phone, and assigned tier badge.
+
+#### 3. Rig Specs & House Rules Controller (`js/specs.js` — Plain JS, Adilet Ainadinov)
+* **What was previously defended (Assignment 5):** Driver request form validation with ticket generation, live text search on FAQ accordion, admin inquiry form with character counter.
+* **NEW FUNCTIONALITY ADDED FOR ENDTERM:**
+  1. **Esports Polling Rate & Motherboard Port Optimizer (`pc-specs.html`):** Dynamically injected an interactive hardware calculation card allowing players to select their mouse polling rate (1,000Hz, 2,000Hz, 4,000Hz, 8,000Hz). Calculates physical input latency (1.000ms down to 0.125ms), percentage delay reduction, and displays optimal motherboard rear port configuration.
+  2. **Delegated FAQ "Helpful 👍" Voting System (`rules.html`):** Injected voting controls into all accordion items. Attached a single **delegated event listener** to `#faqAccordion` using `event.target.closest('.faq-helpful-btn')`, incrementing vote counts in memory without page reload and providing instant feedback.
+
+#### 4. 2GIS Reviews Engine (`js/home.js` — jQuery, Dias Tursynbay)
+* **What was previously defended (Assignment 4):** SlideToggle review form, dynamic review cards rendering, category filtering, search input, helpful upvote button.
+* **NEW FUNCTIONALITY ADDED FOR ENDTERM:**
+  1. **Dynamic Review Sorting Controls:** Added sorting buttons (*★ Highest Rating*, *📅 Newest First*, *👍 Most Helpful*) with method chaining and `.hide().fadeIn(300)` animation.
+  2. **Live 5★ Rating Distribution Progress Bar:** Dynamically calculates the average player rating from `REVIEWS_DATA` via `.reduce()` and computes percentage of 5-star reviews, rendering an on-screen Bootstrap progress bar.
+  3. **Interactive Facility Photo Gallery Lightbox:** Attached a delegated jQuery listener to gallery items that dynamically opens an interactive modal lightbox with high-res photo preview and direct booking CTA link.
+
+#### 5. Tournaments & LAN Calendar (`js/events.js` — Plain JS, Dias Tursynbay)
+* **What was previously defended (Assignment 5):** Tournament card rendering, status filter, 5-man squad form validation, bracket seed generator.
+* **NEW FUNCTIONALITY ADDED FOR ENDTERM:**
+  1. **Live Tournament Countdown Timers:** Calculates real-time difference between current date and tournament matchdays, displaying live countdown badges (*⏰ Starts in: Xd Yh Zm*) that update automatically.
+  2. **Squad Prize Pool Distribution & Payout Calculator:** Selecting a tournament dynamically computes the 1st place share (60%), 2nd place (30%), 3rd place (10%), and the exact cash payout per player for 5-man rosters.
+
+#### 6. Services & Session Cost Estimator (`js/services.js` — Plain JS, Dias Tursynbay)
+* **What was previously defended (Assignment 5):** Zone & hour calculation, smart package deal recommendation, deep-link to booking.
+* **NEW FUNCTIONALITY ADDED FOR ENDTERM:**
+  1. **Squad / Team Size Multiplier:** Added team size selector (1 Solo, 2 Duo, 5-Man Squad) that recalculates session totals across multiple stations and highlights the 5-Man Squad Bootcamp All-Day Pass for massive group savings.
+
+---
+
+### 12.4 The Technical Floor Checklist
+* [x] **Browser Console:** 0 errors and 0 uncaught exceptions on all 7 pages.
+* [x] **Dead Links / Dead Buttons:** 0 dead buttons, 0 dead `#` links. All actions finish logically.
+* [x] **Responsive Layout:** 100% responsive across phone, tablet, and desktop viewports with zero horizontal overflow.
+* [x] **W3C Standards:** Clean semantic HTML5 structure, Bootstrap 5.3.3 utilities, and valid CSS cascade.
+* [x] **Separation of Technologies:** Pure Plain JavaScript and jQuery 3.7.1 maintained in separate files; no inline `onclick` attributes.
+
+---
+
+### 12.5 Defense Guide: Questions & Live Coding Tasks
+
+#### Key Oral Questions & Answers
+1. **Why does direct event binding fail on dynamic elements, and how does delegation solve it?**
+   * *Answer:* Direct binding (`$('.btn').on('click')` or `document.querySelectorAll('.btn')`) inspects the DOM once when executed, attaching listeners only to elements already present. Elements rendered later from arrays did not exist and receive no handlers. Event delegation binds the listener to a permanent ancestor element (e.g. `#faqAccordion` or `#dynamic-seating-container`). When a dynamic child is clicked, native DOM event bubbling propagates the event up to the ancestor, which checks `event.target` and executes the handler.
+2. **What is the difference between `.prop('checked')` and `.attr('checked')`?**
+   * *Answer:* `.attr('checked')` inspects the initial HTML attribute string in markup (the default load state); `.prop('checked')` returns the live boolean property (`true`/`false`) on the DOM node reflecting real-time user interaction.
+3. **What is the difference between `.text()` and `.html()`?**
+   * *Answer:* `.text()` safely HTML-escapes special characters (`<`, `>`, `&`), preventing XSS attacks when displaying user inputs. `.html()` parses markup and injects DOM nodes, used only for rich formatted content like vouchers and badges.
+4. **Why is `event.preventDefault()` essential?**
+   * *Answer:* Forms by default reload the page or navigate via HTTP GET/POST upon submit. Calling `event.preventDefault()` suppresses this reload, allowing JavaScript to validate fields, calculate totals, and render confirmation vouchers on-screen.
+
+#### Expected Live Coding Tasks & Solutions
+* **Task: Add a new field to form validation (e.g. Discord handle or Age verification):**
+  * *Vanilla JS:* Check `field.value.trim()`, if invalid add `.classList.add('is-invalid')` and append error message; on valid add `.classList.remove('is-invalid')`.
+  * *jQuery:* Check `$.trim($field.val())`, if invalid add `$field.addClass('is-invalid error')` and use `$field.siblings('.field-error-feedback').text('Error').show()`.
+* **Task: Change what a loop builds (e.g. add a badge or extra spec to tournament cards):**
+  * Locate `createTournamentCard(item)` in `js/events.js`, create a new `<li>` or `<span>`, set `textContent = item.newProperty`, and append it to `infoList` or `badgeRow`.
+* **Task: Rewrite a short piece of jQuery in Plain JavaScript:**
+  * `$el.addClass('active');` &rarr; `el.classList.add('active');`
+  * `$el.find('.child');` &rarr; `el.querySelector('.child');`
+  * `$el.closest('.card');` &rarr; `el.closest('.card');`
+  * `$el.val();` &rarr; `el.value;`
+  * `$el.on('click', fn);` &rarr; `el.addEventListener('click', fn);`
