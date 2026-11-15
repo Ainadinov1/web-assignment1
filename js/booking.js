@@ -556,9 +556,9 @@ $(function () {
 
     if (id === 'client-phone') {
       const val = $.trim($field.val());
-      const phoneRegex = /^\+?[0-9\s\-()]{10,18}$/;
-      if (!val || !phoneRegex.test(val)) {
-        markFieldError($field, 'Please provide a valid contact telephone number (e.g. +7 706 605 5465).');
+      const kzPhoneRegex = /^(\+?7|8)[\s\-]?\(?7[04567][0-9]\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}$|^(\+?7|8)[\s\-]?\(?7[04567][0-9]\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{4}$/;
+      if (!val || !kzPhoneRegex.test(val)) {
+        markFieldError($field, 'Please provide a valid Kazakh mobile number (e.g. +7 706 605 5465 or 87066055465).');
         return false;
       }
       markFieldSuccess($field);

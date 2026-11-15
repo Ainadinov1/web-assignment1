@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
       event.preventDefault();
 
       const phoneVal = gamerPhone.value.trim();
-      const phoneRegex = /^\+?[0-9\s\-()]{10,18}$/;
+      const phoneRegex = /^(\+?7|8)[\s\-]?\(?7[04567][0-9]\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}$|^(\+?7|8)[\s\-]?\(?7[04567][0-9]\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{4}$/;
       let firstInvalid = null;
 
       if (!driverSoftware.value) {

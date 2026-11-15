@@ -500,11 +500,11 @@ document.addEventListener('DOMContentLoaded', () => {
       teamTagInput.classList.remove('is-invalid');
     }
 
-    // Field 3: Telephone rule
+    // Field 3: Telephone rule (Fixed Endterm Defect: strict Kazakhstan mobile validation)
     const cleanPhone = captainContactInput.value.trim();
-    const phoneRegex = /^\+?[0-9\s\-()]{10,18}$/;
-    if (!phoneRegex.test(cleanPhone)) {
-      errors.push('Captain contact phone must be valid (e.g. +7 706 605 5465).');
+    const kzPhoneRegex = /^(\+?7|8)[\s\-]?\(?7[04567][0-9]\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}$|^(\+?7|8)[\s\-]?\(?7[04567][0-9]\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{4}$/;
+    if (!kzPhoneRegex.test(cleanPhone)) {
+      errors.push('Captain contact phone must be a valid Kazakh number (e.g. +7 706 000 0000 or 87060000000).');
       captainContactInput.classList.add('is-invalid');
       if (!firstInvalidField) firstInvalidField = captainContactInput;
     } else {

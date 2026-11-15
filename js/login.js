@@ -27,8 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const regPass = document.getElementById('regPass');
   const regFeedback = document.getElementById('register-feedback');
 
-  // Phone input validation regex (+7 format)
-  const phonePattern = /^\+?[0-9\s\-()]{10,18}$/;
+  // Phone input validation regex (+7 or 8 Kazakhstan mobile format)
+  const phonePattern = /^(\+?7|8)[\s\-]?\(?7[04567][0-9]\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}$|^(\+?7|8)[\s\-]?\(?7[04567][0-9]\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{4}$/;
 
   /**
    * Helper: Add accessible Show/Hide password toggle button next to an input
@@ -364,7 +364,8 @@ document.addEventListener('DOMContentLoaded', () => {
       <p class="small text-muted mb-2">Enter your registered mobile phone to receive an instant verification code.</p>
       <div class="row g-2 align-items-center mb-2">
         <div class="col-8">
-          <input type="tel" id="recovery-phone-input" class="form-control form-control-sm bg-dark text-light border-secondary" placeholder="+7 706 605 5465">
+          <label for="recovery-phone-input" class="visually-hidden">Registered Mobile Phone</label>
+          <input type="tel" id="recovery-phone-input" class="form-control form-control-sm bg-dark text-light border-secondary" placeholder="+7 706 605 5465" aria-label="Registered Mobile Phone">
         </div>
         <div class="col-4">
           <button type="button" id="btn-request-sms" class="btn btn-outline-info btn-sm w-100 fw-semibold">Send SMS</button>
@@ -374,10 +375,12 @@ document.addEventListener('DOMContentLoaded', () => {
       <div id="recovery-step-two" class="d-none">
         <div class="row g-2 mb-2">
           <div class="col-6">
-            <input type="text" id="recovery-code-input" class="form-control form-control-sm bg-dark text-light border-secondary" placeholder="4-digit SMS Code" maxlength="4">
+            <label for="recovery-code-input" class="visually-hidden">4-digit SMS Code</label>
+            <input type="text" id="recovery-code-input" class="form-control form-control-sm bg-dark text-light border-secondary" placeholder="4-digit SMS Code" maxlength="4" aria-label="4-digit SMS Code">
           </div>
           <div class="col-6">
-            <input type="password" id="recovery-new-pin" class="form-control form-control-sm bg-dark text-light border-secondary" placeholder="New 6-digit PIN" maxlength="6">
+            <label for="recovery-new-pin" class="visually-hidden">New 6-digit PIN</label>
+            <input type="password" id="recovery-new-pin" class="form-control form-control-sm bg-dark text-light border-secondary" placeholder="New 6-digit PIN" maxlength="6" aria-label="New 6-digit PIN">
           </div>
         </div>
         <button type="button" id="btn-submit-pin-reset" class="btn btn-success btn-sm w-100 fw-bold text-dark">Confirm &amp; Set New PIN</button>
@@ -401,6 +404,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const recoveryNewPin = document.getElementById('recovery-new-pin');
     const btnSubmitReset = document.getElementById('btn-submit-pin-reset');
     const recoveryFeedback = document.getElementById('recovery-status-feedback');
+
+    // Keyboard Accessibility: Enter key triggers SMS request
+    if (recoveryPhoneInput && btnRequestSms) {
+      recoveryPhoneInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          btnRequestSms.click();
+        }
+      });
+    }
+
+    // Keyboard Accessibility: Enter key in PIN fields triggers confirmation
+    if (recoveryNewPin && btnSubmitReset) {
+      recoveryNewPin.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          btnSubmitReset.click();
+        }
+      });
+    }
 
     if (btnRequestSms && recoveryPhoneInput) {
       btnRequestSms.addEventListener('click', () => {

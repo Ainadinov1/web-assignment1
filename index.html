@@ -240,8 +240,9 @@
           </div>
           <div class="col-12 col-lg-6">
             <form id="newsletter-form" action="index.html" method="POST">
+              <label for="newsletter-email" class="visually-hidden">Email address for tournament updates</label>
               <div class="input-group">
-                <input type="email" class="form-control bg-dark text-light border-secondary" id="newsletter-email" name="newsletter_email" placeholder="gamer@example.kz" required>
+                <input type="email" class="form-control bg-dark text-light border-secondary" id="newsletter-email" name="newsletter_email" placeholder="gamer@example.kz" aria-label="Email address" required>
                 <button class="btn btn-info fw-bold text-dark" type="submit" id="newsletter-submit-btn">Subscribe</button>
               </div>
               <p class="small text-muted mt-1 mb-0">* Submitting records your email for club updates. No spam guarantee.</p>
