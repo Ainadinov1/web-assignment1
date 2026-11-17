@@ -252,7 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (squadDeal) {
         const recText = document.createElement('span');
         recText.className = 'badge bg-warning text-dark p-2 me-1 fw-bold';
-        recText.textContent = `🔥 5-Man Squad Deal: ${squadDeal.package.title}`;
+        recText.textContent = `5-Man Squad Deal: ${squadDeal.package.title}`;
 
         const savingsText = document.createElement('span');
         savingsText.className = 'text-accent d-block mt-1';
@@ -263,7 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
       } else if (result.bestDeal) {
         const recText = document.createElement('span');
         recText.className = 'badge bg-success text-dark p-2 me-1 fw-bold';
-        recText.textContent = `💡 Smart Deal: ${result.bestDeal.package.title}`;
+        recText.textContent = `Recommended Deal: ${result.bestDeal.package.title}`;
 
         const savingsText = document.createElement('span');
         savingsText.className = 'text-accent d-block mt-1';

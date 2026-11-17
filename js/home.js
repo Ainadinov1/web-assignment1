@@ -199,7 +199,7 @@ function createReviewCard(review) {
   // Delegated target element created dynamically in code
   const $helpfulBtn = $('<button type="button" class="btn btn-outline-info btn-sm review-helpful-btn" title="Mark this review as helpful"></button>')
     .attr('data-votes', '0')
-    .html('👍 <span class="vote-count">0</span>');
+    .html('Helpful (<span class="vote-count">0</span>)');
 
   const $linkBtn = $('<a class="btn btn-outline-secondary btn-sm" target="_blank" rel="noopener noreferrer">2GIS &rarr;</a>')
     .attr('href', review.verifiedUrl || 'https://2gis.kz/astana');
@@ -333,9 +333,9 @@ $(function () {
   const $sortBar = $('<div class="d-flex flex-wrap align-items-center gap-2 mt-3 pt-2 border-top border-secondary small"></div>');
   $sortBar.append('<span class="text-muted fw-semibold">Sort Reviews:</span>');
   const sortOptions = [
-    { key: 'rating', label: '★ Highest Rating' },
-    { key: 'date', label: '📅 Newest First' },
-    { key: 'helpful', label: '👍 Most Helpful' }
+    { key: 'rating', label: 'Highest Rating' },
+    { key: 'date', label: 'Newest First' },
+    { key: 'helpful', label: 'Most Helpful' }
   ];
   $.each(sortOptions, function (i, opt) {
     const isDefault = opt.key === 'rating';
@@ -509,21 +509,28 @@ $(function () {
     event.preventDefault();
 
     const $btn = $(this);
+
+    // Prevent duplicate voting: only 1 vote per review per session
+    if ($btn.hasClass('voted') || $btn.prop('disabled')) {
+      return;
+    }
+
     const $countSpan = $btn.find('.vote-count');
     let currentVotes = parseInt($btn.attr('data-votes'), 10) || 0;
     currentVotes += 1;
 
-    // Update attributes, classes and text
+    // Update attributes, classes, disable button to lock in the vote
     $btn.attr('data-votes', currentVotes)
-      .addClass('btn-info text-dark fw-bold')
-      .removeClass('btn-outline-info');
+      .addClass('btn-success text-dark fw-bold voted')
+      .removeClass('btn-outline-info')
+      .prop('disabled', true);
 
     $countSpan.text(currentVotes);
 
     // Traversal: reach parent card and find author name
     const authorName = $btn.closest('.card').find('.review-author-name').text();
     if (typeof displayGlobalToast === 'function') {
-      displayGlobalToast('Review Upvoted', `Marked ${authorName}'s review as helpful!`, 'success');
+      displayGlobalToast('Review Helpful', `Marked ${authorName}'s review as helpful!`, 'success');
     }
   });
 

@@ -82,6 +82,9 @@ function displayGlobalToast(title, message, type = 'info') {
   if ($toastContainer.length === 0) {
     $toastContainer = $('<div id="qp-global-toast-container" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080;"></div>')
       .appendTo('body');
+  } else {
+    // Keep maximum 2 toasts at a time to prevent stacking overflow
+    $toastContainer.find('.alert').slice(0, -1).fadeOut(150, function () { $(this).remove(); });
   }
 
   // Create toast element using jQuery DOM creation

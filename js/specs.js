@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     optimizerCard.className = 'p-3 bg-dark bg-opacity-75 rounded border border-info mb-4 shadow-sm';
     optimizerCard.innerHTML = `
       <div class="d-flex justify-content-between align-items-center mb-2">
-        <h4 class="h6 text-accent fw-bold mb-0">⚡ Esports Hardware Optimizer: Polling Rate &amp; Port Configuration</h4>
+        <h4 class="h6 text-accent fw-bold mb-0">Esports Hardware Optimizer: Polling Rate &amp; Port Configuration</h4>
         <span class="badge bg-info text-dark">Sub-1ms Latency</span>
       </div>
       <p class="small text-muted mb-3">Calculate hardware response time and determine the optimal motherboard USB port for your high-performance gaming gear.</p>
@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
               <span>Delay Reduction: <strong id="polling-reduction-val" class="text-success">Base Standard</strong></span>
             </div>
             <div class="text-muted mt-1" id="polling-port-advice">
-              🔌 Recommended Port: Any USB 3.0/3.2 Port (Standard Arena, VIP 1, VIP 2).
+              Recommended Port: Any USB 3.0/3.2 Port (Standard Arena, VIP 1, VIP 2).
             </div>
           </div>
         </div>
@@ -70,13 +70,13 @@ document.addEventListener('DOMContentLoaded', () => {
         let advice = '';
 
         if (rate === 1000) {
-          advice = '🔌 Recommended Port: Any USB 3.0/3.2 Port (Standard Arena, VIP 1, VIP 2).';
+          advice = 'Recommended Port: Any USB 3.0/3.2 Port (Standard Arena, VIP 1, VIP 2).';
         } else if (rate === 2000) {
-          advice = '⚡ Recommended Port: Motherboard Rear USB 3.2 Gen 1 (Avoid front panel hubs).';
+          advice = 'Recommended Port: Motherboard Rear USB 3.2 Gen 1 (Avoid front panel hubs).';
         } else if (rate === 4000) {
-          advice = '🚀 Recommended Port: Direct CPU-connected Red USB 3.2 Gen 2 Port (VIP 1 or VIP 2).';
+          advice = 'Recommended Port: Direct CPU-connected Red USB 3.2 Gen 2 Port (VIP 1 or VIP 2).';
         } else if (rate === 8000) {
-          advice = '🏆 Recommended Port: Direct Rear USB 3.2 Gen 2 (VIP 2 Alienware 360Hz Bootcamp recommended for 0.125ms!).';
+          advice = 'Recommended Port: Direct Rear USB 3.2 Gen 2 (VIP 2 Alienware 360Hz Bootcamp recommended for 0.125ms).';
         }
 
         latencyVal.textContent = `${latency} ms`;
@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       driverFeedback.className = 'alert alert-success mt-4';
       driverFeedback.innerHTML = `
-        <h4 class="alert-heading h5 fw-bold">⚙️ Pre-Load Configuration Request Recorded!</h4>
+        <h4 class="alert-heading h5 fw-bold">Pre-Load Configuration Request Recorded</h4>
         <p class="mb-1">Our technical administrators will pre-install <strong>${selectedDriver}</strong> on an available station in <strong>${selectedZone}</strong>.</p>
         <hr class="border-secondary">
         <div class="d-flex flex-wrap justify-content-between small">
@@ -214,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
       voteBar.innerHTML = `
         <span class="text-muted small">Was this house rule explanation helpful?</span>
         <button type="button" class="btn btn-outline-info btn-sm faq-helpful-btn" data-faq-index="${idx}">
-          👍 Helpful (<span class="vote-num">${12 + idx * 5}</span>)
+          Helpful (<span class="vote-num">${12 + idx * 5}</span>)
         </button>
       `;
       body.appendChild(voteBar);

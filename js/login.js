@@ -43,15 +43,15 @@ document.addEventListener('DOMContentLoaded', () => {
     toggleBtn.type = 'button';
     toggleBtn.className = 'btn btn-outline-secondary btn-sm mt-1';
     toggleBtn.setAttribute('aria-label', 'Toggle password visibility');
-    toggleBtn.textContent = '👁 Show Password';
+    toggleBtn.textContent = 'Show Password';
 
     toggleBtn.addEventListener('click', () => {
       if (passwordInput.type === 'password') {
         passwordInput.type = 'text';
-        toggleBtn.textContent = '🙈 Hide Password';
+        toggleBtn.textContent = 'Hide Password';
       } else {
         passwordInput.type = 'password';
-        toggleBtn.textContent = '👁 Show Password';
+        toggleBtn.textContent = 'Show Password';
       }
     });
 
@@ -360,7 +360,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const recoveryBox = document.createElement('div');
     recoveryBox.className = 'mt-3 pt-3 border-top border-secondary';
     recoveryBox.innerHTML = `
-      <h4 class="h6 text-accent fw-bold mb-2">🔑 Self-Service PIN Reset Simulator</h4>
+      <h4 class="h6 text-accent fw-bold mb-2">Self-Service PIN Reset Simulator</h4>
       <p class="small text-muted mb-2">Enter your registered mobile phone to receive an instant verification code.</p>
       <div class="row g-2 align-items-center mb-2">
         <div class="col-8">
@@ -443,7 +443,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (smsNotification) {
           smsNotification.innerHTML = `
-            <strong>📱 [QazaqPeek SMS Gateway]:</strong> Verification code for <code>${targetPhone}</code>: <strong class="text-accent fs-6">${activeSmsCode}</strong>.
+            <strong>[QazaqPeek SMS Service]:</strong> Verification code for <code>${targetPhone}</code>: <strong class="text-accent fs-6">${activeSmsCode}</strong>.
           `;
           smsNotification.classList.remove('d-none');
         }
